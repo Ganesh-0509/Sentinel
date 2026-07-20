@@ -1,0 +1,22 @@
+# virtual environment
+.venv/
+venv/
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# trained model artifacts (regenerate via scripts/run_pipeline.py)
+models/
+
+# downloaded external datasets
+data/external/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

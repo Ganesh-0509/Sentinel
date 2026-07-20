@@ -1,0 +1,60 @@
+{
+  "threshold": 0.85,
+  "precision": 0.8835743418613274,
+  "recall": 0.7156156156156156,
+  "f1": 0.7907748465239754,
+  "roc_auc": 0.9747665021667489,
+  "pr_auc": 0.8587841523239884,
+  "n_rows": 48742,
+  "positive_rate": 0.0683189036149522,
+  "top_features": [
+    [
+      "gas_max",
+      1067.0
+    ],
+    [
+      "pressure_now",
+      748.0
+    ],
+    [
+      "gas_mean",
+      681.0
+    ],
+    [
+      "vib_mean",
+      681.0
+    ],
+    [
+      "gas_std",
+      613.0
+    ],
+    [
+      "workers_in_zone",
+      597.0
+    ],
+    [
+      "time_since_maint",
+      491.0
+    ],
+    [
+      "gas_trend",
+      487.0
+    ],
+    [
+      "temp_now",
+      437.0
+    ],
+    [
+      "temp_trend",
+      431.0
+    ],
+    [
+      "vib_now",
+      368.0
+    ],
+    [
+      "time_since_permit",
+      344.0
+    ]
+  ]
+}
