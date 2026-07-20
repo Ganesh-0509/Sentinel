@@ -85,6 +85,8 @@ def main():
 
     board = scoreboard_text(agg)
     (REPORTS / "scoreboard.txt").write_text(board, encoding="utf-8")
+    # machine-readable copy consumed by GET /api/v1/evaluation/scoreboard
+    (REPORTS / "scoreboard.json").write_text(json.dumps(agg, indent=2), encoding="utf-8")
     print("\n" + board + "\n")
 
     print("   row-level ML:  "

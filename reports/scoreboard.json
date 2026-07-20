@@ -1,0 +1,22 @@
+{
+  "matched_incidents": 46,
+  "matched_baseline_lead_min": 27.282608695652176,
+  "matched_compound_lead_min": 12.91304347826087,
+  "incidents_missed_by_baseline_caught_by_compound": 17,
+  "n_episodes": 300,
+  "n_incident_episodes": 64,
+  "n_safe_episodes": 133,
+  "n_nearmiss_episodes": 103,
+  "baseline_nearmiss_warning_rate": 0.6504854368932039,
+  "compound_nearmiss_warning_rate": 0.42718446601941745,
+  "baseline_detection_rate": 0.734375,
+  "compound_detection_rate": 0.984375,
+  "baseline_false_negative_rate": 0.265625,
+  "compound_false_negative_rate": 0.015625,
+  "baseline_mean_lead_min": 29.574468085106382,
+  "compound_mean_lead_min": 12.26984126984127,
+  "baseline_false_alarm_rate": 0.5488721804511278,
+  "compound_false_alarm_rate": 0.10526315789473684,
+  "baseline_nuisance_minutes": 195,
+  "compound_nuisance_minutes": 21
+}

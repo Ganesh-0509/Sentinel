@@ -77,8 +77,18 @@ def _split_sections(body: str) -> list[tuple[str, str]]:
 
 
 class RegulationStore:
-    def __init__(self, corpus_dir: str | Path = "data/regulations"):
+    """Loads the public corpus plus any licensed documents held locally.
+
+    `data/regulations`       committed: statutes and our own SOPs.
+    `data/regulations_local` git-ignored: restricted-circulation standards (e.g.
+                             OISD-STD-105) that must not enter version control.
+                             Present on the operator's machine only.
+    """
+
+    def __init__(self, corpus_dir: str | Path = "data/regulations",
+                 local_dir: str | Path = "data/regulations_local"):
         self.corpus_dir = Path(corpus_dir)
+        self.local_dir = Path(local_dir)
         self.chunks: list[Chunk] = []
         self._matrix = None
         self._vectorizer: TfidfVectorizer | None = None
@@ -87,10 +97,16 @@ class RegulationStore:
 
     # ------------------------------------------------------------------ build
     def build(self) -> "RegulationStore":
-        for path in sorted(self.corpus_dir.glob("*.md")):
+        paths = list(self.corpus_dir.glob("*.md"))
+        if self.local_dir.exists():
+            paths += list(self.local_dir.glob("*.md")) + list(self.local_dir.glob("*.txt"))
+        for path in sorted(paths):
             if path.name.lower() == "readme.md":
                 continue
             meta, body = _parse_front_matter(path.read_text(encoding="utf-8"))
+            # anything supplied locally is the operator's licensed copy
+            if self.local_dir in path.parents:
+                meta.setdefault("provenance", "OFFICIAL")
             for heading, text in _split_sections(body):
                 self.chunks.append(Chunk(
                     text=text,

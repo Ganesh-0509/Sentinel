@@ -15,6 +15,14 @@ models/
 # downloaded external datasets
 data/external/
 
+# Licensed / restricted-circulation standards (e.g. OISD-STD-105).
+# These must never enter version control - see data/regulations/README.md
+data/regulations_local/
+
+# frontend
+node_modules/
+frontend/dist/
+
 # OS / editor
 .DS_Store
 Thumbs.db
