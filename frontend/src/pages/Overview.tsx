@@ -82,9 +82,11 @@ export function Overview() {
                     }}
                   />
                   <Area type="monotone" dataKey="max_risk" stroke="#ef4444"
-                        strokeWidth={2} fill="url(#ovMax)" name="peak zone risk" />
+                        strokeWidth={2} fill="url(#ovMax)" name="peak zone risk"
+                        isAnimationActive={false} />
                   <Area type="monotone" dataKey="mean_risk" stroke="#64748b"
-                        strokeWidth={1.5} fill="none" name="plant mean" />
+                        strokeWidth={1.5} fill="none" name="plant mean"
+                        isAnimationActive={false} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

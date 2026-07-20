@@ -93,9 +93,11 @@ export function ZoneDetail({ zone, history }: Props) {
               labelStyle={{ color: '#94a3b8' }}
             />
             <Area yAxisId="l" type="monotone" dataKey="risk" stroke="#ef4444"
-                  strokeWidth={2} fill="url(#riskArea)" name="compound risk" />
+                  strokeWidth={2} fill="url(#riskArea)" name="compound risk"
+                  isAnimationActive={false} />
             <Line yAxisId="r" type="monotone" dataKey="gas_lel" stroke="#64748b"
-                  strokeWidth={1.5} dot={false} name="gas %LEL" />
+                  strokeWidth={1.5} dot={false} name="gas %LEL"
+                  isAnimationActive={false} />
           </AreaChart>
         </ResponsiveContainer>
       </div>

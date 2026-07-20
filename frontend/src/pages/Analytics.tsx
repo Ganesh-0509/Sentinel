@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import {
   Bar as RBar,
   BarChart,
@@ -187,7 +187,7 @@ export function Analytics() {
 
               <div className="mt-3 rounded border border-emerald-500/25 bg-emerald-500/10 px-3 py-2">
                 <p className="stat text-lg text-emerald-300">
-                  −{alarms.nuisance_reduction_pct}%
+                  âˆ’{alarms.nuisance_reduction_pct}%
                 </p>
                 <p className="text-[10.5px] text-emerald-200/80">
                   reduction in operator alarm load versus the single-sensor baseline.
@@ -293,11 +293,11 @@ export function Analytics() {
                 />
                 <Legend wrapperStyle={{ fontSize: 10 }} />
                 <Line yAxisId="l" type="monotone" dataKey="max_risk" stroke="#ef4444"
-                      strokeWidth={2} dot={false} name="peak zone risk" />
+                      strokeWidth={2} dot={false} isAnimationActive={false} name="peak zone risk" />
                 <Line yAxisId="l" type="monotone" dataKey="mean_risk" stroke="#64748b"
-                      strokeWidth={1.5} dot={false} name="plant mean" />
+                      strokeWidth={1.5} dot={false} isAnimationActive={false} name="plant mean" />
                 <Line yAxisId="r" type="stepAfter" dataKey="zones_at_risk" stroke="#f59e0b"
-                      strokeWidth={1.5} dot={false} name="zones at risk" />
+                      strokeWidth={1.5} dot={false} isAnimationActive={false} name="zones at risk" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -306,3 +306,6 @@ export function Analytics() {
     </>
   )
 }
+
+
+

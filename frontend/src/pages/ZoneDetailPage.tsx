@@ -34,11 +34,9 @@ export function ZoneDetailPage() {
         }
       />
 
-      <div className="grid gap-3 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-        <div className="min-h-[520px]">
-          <ZoneDetail zone={zone} history={history} />
-        </div>
-        <div className="min-h-[520px]">
+      <div className="grid items-start gap-3 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
+        <ZoneDetail zone={zone} history={history} />
+        <div className="min-h-[560px]">
           <AgentPanel zone={zone} />
         </div>
       </div>
