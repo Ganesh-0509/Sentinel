@@ -149,7 +149,7 @@ export function Incidents() {
           <Empty>No records.</Empty>
         ) : (
           <ul className="divide-y divide-ink-600">
-            {shown.slice(0, 25).map((r) => (
+            {shown.slice(0, 15).map((r) => (
               <li key={r.record_id} className="px-4 py-2.5">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -175,9 +175,16 @@ export function Incidents() {
                     </span>
                   </div>
                 </div>
-                <p className="mt-1 text-[10.5px] leading-snug text-slate-500">
-                  {r.narrative}
-                </p>
+                <details className="group mt-1">
+                  <summary className="cursor-pointer list-none text-[10.5px] leading-snug text-slate-500 [&::-webkit-details-marker]:hidden">
+                    <span className="line-clamp-2 group-open:line-clamp-none">
+                      {r.narrative}
+                    </span>
+                    <span className="mt-0.5 inline-block text-[10px] text-sky-400/70 group-open:hidden">
+                      show full record
+                    </span>
+                  </summary>
+                </details>
               </li>
             ))}
           </ul>

@@ -11,6 +11,7 @@ const ROUTES = [
   ['zone-detail', '/zones/COB-B'],
   ['alerts', '/alerts'],
   ['analytics', '/analytics'],
+  ['incidents', '/incidents'],
   ['permits', '/permits'],
   ['compliance', '/compliance'],
   ['evidence', '/evidence'],

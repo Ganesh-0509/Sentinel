@@ -98,7 +98,9 @@ export function Evidence() {
               <Row k="Explainability" v="SHAP attribution on every alert" />
               <Row k="Novelty detection" v="Isolation Forest + PCA reconstruction, trained on normal operation only" />
               <Row k="Hard limits" v="Deterministic gas/oxygen interlocks hold veto; the model can only tighten a decision" />
-              <Row k="Validation status" v="Simulator-derived. External validation against TEP and HAI is documented but not yet run." />
+              <Row k="External validation" v="Anomaly layer validated unchanged on Tennessee Eastman (84.7% detection @ 1% false alarms) and HAI (ROC-AUC 0.966, 5/5 attacks). Plant-specific numbers remain simulator-derived." />
+              <Row k="Known limitation" v="Separability transfers across processes; calibration does not. Thresholds must be recalibrated per plant and per operating campaign." />
+              <Row k="Not validated" v="The lead-time claim. TEP and HAI anomalies are injected, not developing hazards, so neither benchmark can test early warning." />
             </dl>
           </Panel>
         </div>

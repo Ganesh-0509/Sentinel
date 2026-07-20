@@ -84,6 +84,33 @@ holds. It also means any deployment must recalibrate the supervised layer per pl
 predicting them early is information-theoretically impossible. **TEP validates detection, not
 our lead-time claim.** That would need a benchmark where hazards develop over time.
 
+### Second external check — HAI (adversarial, harder)
+
+TEP faults are *process* faults. HAI anomalies are **adversarial manipulations of a real ICS
+testbed, deliberately crafted to resemble normal operation** — a strictly harder test, and one
+a mere change-detector would fail. Same detector, unchanged, trained on normal only.
+`scripts/validate_hai.py`
+
+| Measure | Result |
+|---|---|
+| ROC-AUC (threshold-free) | **0.966** |
+| Attacks detected | **5 / 5**, median delay **0 s** |
+| Per-sample detection @ deployed threshold | 96.7 % — but at **6.6 %** false alarms |
+| Per-sample detection @ a true 1 % false-alarm budget | 95.1 % |
+
+**The consistent finding across both benchmarks: separability transfers, calibration does not.**
+The detector cleanly separates abnormal from normal on a process it has never seen (AUC 0.966).
+But the threshold calibrated on *training* normals produced 6.6 % false alarms on the test run
+instead of the intended 1 %, because that run's normal operating point had shifted.
+
+This is the same conclusion TEP Arm B reached, now confirmed independently. It has a concrete
+deployment consequence, and it is written into the model card: **thresholds must be
+recalibrated per plant and per operating campaign, or made adaptive.** A vendor claiming a
+fixed threshold works across sites would be wrong.
+
+*Caveats: one test run, five attack episodes — a small sample. Average precision is 0.178,
+which looks poor but is expected at a 1.4 % positive rate.*
+
 > **Why the baseline fails honestly.** It reads one point sensor, which can be attenuated by
 > placement or disturbed airflow — common during maintenance. SentinelAI fuses pressure,
 > temperature, vibration and operational context, so it sees hazards the point sensor cannot.

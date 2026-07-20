@@ -56,7 +56,22 @@ Note two things honestly: faults 3, 9 and 15 are established-undetectable in the
 our detector independently scores them near zero (a validity check); and **TEP cannot validate
 the lead-time claim**, because its faults are injected disturbances with no precursor phase.
 
-**HAI — outstanding.** Closest remaining external check.
+**HAI — done.** `scripts/validate_hai.py`, results in `reports/hai_validation.json`.
+Fetch (~36 MB, not committed):
+
+```bash
+mkdir -p data/external/hai
+curl -sSL -o data/external/hai/train1.csv.gz https://raw.githubusercontent.com/icsdataset/hai/master/hai-21.03/train1.csv.gz
+curl -sSL -o data/external/hai/test1.csv.gz  https://raw.githubusercontent.com/icsdataset/hai/master/hai-21.03/test1.csv.gz
+```
+
+The detector, unchanged and trained on normal operation only, reaches ROC-AUC 0.966 and
+detects 5 of 5 attack episodes with a 0 s median delay. The threshold calibrated on training
+normals drifted to a 6.6 % false-alarm rate on the test run rather than the intended 1 %;
+at a correctly calibrated 1 % budget the same scores give 95.1 % per-sample detection.
+
+Across both benchmarks the conclusion is the same: **separability transfers, calibration does
+not.** Deployments must recalibrate per plant and per operating campaign.
 
 ## Download helper (to be added in Phase 2)
 `scripts/fetch_datasets.py` will pull the **free** Tier-A/B sets (TEP CSV, HAI, UCI Gas) into
