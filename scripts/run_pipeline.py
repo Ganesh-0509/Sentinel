@@ -31,11 +31,14 @@ from sentinel.ml.features import build_features, label_rows
 from sentinel.ml.forecaster import CompoundRiskForecaster
 from sentinel.evaluation.harness import (
     evaluate_episode, aggregate, scoreboard_text, tune_threshold,
+    episode_signals, operating_curve,
 )
 
-N_TRAIN = 500
-N_VALID = 120
-N_TEST = 250
+# Incidents became rarer once operator intervention was modelled, so we need more
+# episodes to keep enough positive examples for a stable model.
+N_TRAIN = 800
+N_VALID = 200
+N_TEST = 300
 
 REPORTS = ROOT / "reports"
 MODELS = ROOT / "models"
@@ -62,7 +65,9 @@ def main():
           f"(positive rate {train_df['y'].mean():.3f}) ...")
     model = CompoundRiskForecaster().fit(train_df, valid_df)
     # refine the operating point at the episode level (detection + lead, fa-capped)
-    tune_threshold(valid_raw, model, fa_cap=0.12)
+    # 0.20 still leaves us far below the single-sensor baseline's nuisance rate
+    # while buying back meaningful lead time.
+    tune_threshold(valid_raw, model, fa_cap=0.20)
     model.save(MODELS / "forecaster.pkl")
     print(f"   selected decision threshold = {model.threshold:.2f}")
 
@@ -88,6 +93,19 @@ def main():
           f"recall={row_metrics['recall']:.3f}  precision={row_metrics['precision']:.3f}")
     print("   top features: " +
           ", ".join(f"{k}" for k, _ in row_metrics["top_features"][:6]))
+
+    # --- apples-to-apples: what does SentinelAI do at the BASELINE's own
+    #     nuisance level? A low fixed-threshold alarm buys lead time by alarming
+    #     constantly, so this is the only fair lead-time comparison.
+    curve = operating_curve(episode_signals(model, test_raw))
+    curve.to_csv(REPORTS / "operating_curve.csv", index=False)
+    base_fa = agg["baseline_false_alarm_rate"]
+    matched = curve.iloc[(curve["false_alarm"] - base_fa).abs().idxmin()]
+    print(f"   At the baseline's own false-alarm rate ({base_fa:.1%}), SentinelAI reaches:")
+    print(f"      detection {matched['detection']:.1%}  |  "
+          f"lead {matched['lead']:.1f} min  |  "
+          f"(baseline: {agg['baseline_detection_rate']:.1%} / "
+          f"{agg['matched_baseline_lead_min']:.1f} min)")
 
     _plot(agg, REPORTS / "scoreboard.png")
     print(f"\n>> artifacts written to {REPORTS}")

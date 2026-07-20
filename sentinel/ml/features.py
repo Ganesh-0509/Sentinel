@@ -14,19 +14,38 @@ import pandas as pd
 
 from sentinel import config as C
 
-# Observable inputs the model is allowed to see (gas_true is deliberately absent).
+# Model inputs: hazard physics + operational context. `gas_true` is deliberately
+# absent (it defines the label -- feeding it in would be leakage).
+#
+# The shift/roster group is ALSO deliberately excluded. See scripts/ablation_shift.py:
+# once shift changeover was modelled properly, those features became genuinely
+# predictive of the label -- and that turned out to be the problem. They predict
+# whether a HUMAN will rescue the situation, so the model learns "day shift, no
+# changeover -> someone will probably catch this -> lower risk" and under-alerts.
+# At a matched false-alarm rate that cost 17.8 points of detection. A safety alert
+# must reflect the HAZARD, not the odds that somebody else fixes it.
 FEATURE_COLUMNS = [
     "gas_now", "gas_mean", "gas_max", "gas_std", "gas_trend", "gas_roc",
     "pressure_now", "pressure_trend", "pressure_roc",
     "temp_now", "temp_trend",
     "vib_now", "vib_mean",
     "maintenance_active", "hot_work_permit", "confined_space_permit",
-    "night_shift", "workers_in_zone",
     "time_since_maint", "time_since_permit",
     # interaction terms (the compound signal)
     "gas_trend_x_hotwork", "pressure_trend_x_hotwork",
     "gas_now_x_maint", "gas_roc_x_maint", "pressure_trend_x_maint",
 ]
+
+# Shift/roster-derived signals. NOT model inputs -- they are consumed by the
+# decision layer (sentinel/decision/priority.py) as consequence/urgency
+# multipliers for alert prioritisation and evacuation.
+SHIFT_FEATURE_GROUP = [
+    "night_shift", "workers_in_zone",
+    "in_changeover", "mins_since_changeover", "gas_trend_x_changeover",
+]
+
+# Used only by the ablation study to reproduce the "with shift" arm.
+ALL_FEATURE_COLUMNS = FEATURE_COLUMNS + SHIFT_FEATURE_GROUP
 
 
 def _slope(window: np.ndarray) -> float:
@@ -108,6 +127,9 @@ def build_features(episode: pd.DataFrame) -> pd.DataFrame:
             "confined_space_permit": int(ep["confined_space_permit"][i]),
             "night_shift": int(ep["night_shift"][i]),
             "workers_in_zone": int(ep["workers_in_zone"][i]),
+            "in_changeover": int(ep["in_changeover"][i]),
+            "mins_since_changeover": float(ep["mins_since_changeover"][i]),
+            "gas_trend_x_changeover": gas_trend * int(ep["in_changeover"][i]),
             "time_since_maint": float(tsm[i]),
             "time_since_permit": float(tsp[i]),
             "gas_trend_x_hotwork": gas_trend * hot,

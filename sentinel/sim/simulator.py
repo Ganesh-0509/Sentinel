@@ -30,11 +30,26 @@ from sentinel import config as C
 
 # Scenario mix used to build a dataset. Weights are sampling probabilities.
 SCENARIO_MIX = {
-    "normal": 0.38,             # no leak (may contain harmless sensor spikes)
-    "gas_leak_visible": 0.20,   # leak, well-placed sensor, no hot work -> toxic, baseline sees it
-    "compound_hidden": 0.27,    # leak + maintenance + hot work + attenuated sensor -> explosion, baseline struggles
+    "normal": 0.30,             # no leak (may contain harmless sensor spikes)
+    "gas_leak_visible": 0.18,   # leak, well-placed sensor, no hot work -> toxic, baseline sees it
+    "compound_hidden": 0.37,    # leak + maintenance + hot work + attenuated sensor -> explosion, baseline struggles
     "maintenance_no_leak": 0.15,  # busy zone, no leak -> tests false alarms
 }
+
+# --- operator response model (this is what makes shift state causal) --------
+# Without a human-response mechanism, a leak grows unchecked regardless of who is
+# on duty, so shift features CANNOT matter. Modelling detection latency gives
+# shift state a real causal path: shift -> detection speed -> isolated in time?
+NOTICE_LEL = 6.0            # control-room reacts once the point sensor reads this
+P_DETECT_BASE = 0.10        # per-minute chance a day-shift crew spots and acts
+NIGHT_FACTOR = 0.45         # fatigue, thinner staffing, slower escalation
+CHANGEOVER_FACTOR = 0.20    # attention split during handover
+HANDOVER_LOSS_PROB = 0.50   # chance the outgoing crew fails to pass the concern on
+HANDOVER_LOSS_FACTOR = 0.30  # detection penalty for the lost-information period
+HANDOVER_LOSS_MINUTES = 30
+CHANGEOVER_PRE = 10          # window before the changeover minute
+CHANGEOVER_POST = 15         # window after
+VENT_DECAY = 0.90           # gas decay per minute once the leak is isolated
 
 
 def _ar1(n, mean, sd, phi, rng):
@@ -76,9 +91,32 @@ def simulate_episode(scenario: str, rng: np.random.Generator, episode_id: int = 
             ps = int(rng.integers(10, 100))
             confined_space[ps:ps + 60] = 1
 
-    # ---- true gas hazard dynamics -------------------------------------------
+    # ---- shift changeover schedule -----------------------------------------
+    # A 4-hour episode contains at most one crew changeover.
+    in_changeover = np.zeros(n, dtype=int)
+    t_change = -1
+    if rng.random() < 0.55:
+        t_change = int(rng.integers(60, 180))
+        lo = max(0, t_change - CHANGEOVER_PRE)
+        hi = min(n, t_change + CHANGEOVER_POST)
+        in_changeover[lo:hi] = 1
+    mins_since_changeover = np.full(n, 999.0)
+    if t_change >= 0:
+        for k in range(t_change, n):
+            mins_since_changeover[k] = k - t_change
+
+    # ---- sensor placement / attenuation (decided up-front: the operator only
+    #      sees the point sensor, so it also gates human detection) -----------
+    if scenario == "compound_hidden":
+        attenuation = rng.uniform(0.40, 0.60)   # poor placement / disturbed airflow
+    else:
+        attenuation = rng.uniform(0.80, 0.96)
+
+    # ---- true gas hazard dynamics + operator response ----------------------
     gas_true = _ar1(n, C.GAS_NORMAL_MEAN, 0.6, 0.6, rng).clip(min=0)
     leak_active = np.zeros(n, dtype=int)
+    intervened_at = -1
+    handover_lost = t_change >= 0 and rng.random() < HANDOVER_LOSS_PROB
 
     leak = scenario in ("gas_leak_visible", "compound_hidden")
     if leak:
@@ -86,12 +124,33 @@ def simulate_episode(scenario: str, rng: np.random.Generator, episode_id: int = 
         base_rate = rng.uniform(0.35, 0.9)        # % LEL per minute
         accel = rng.uniform(0.004, 0.012)         # escalation
         for k in range(leak_start, n):
-            leak_active[k] = 1
             dt = k - leak_start
-            # maintenance disturbs seals -> faster release (a genuine compound driver)
-            amp = 1.0 + 0.9 * maintenance_active[k]
-            rate = (base_rate + accel * dt) * amp
-            gas_true[k] = gas_true[k - 1] + rate + rng.normal(0, 0.4)
+            if intervened_at < 0:
+                leak_active[k] = 1
+                # maintenance disturbs seals -> faster release (compound driver)
+                amp = 1.0 + 0.9 * maintenance_active[k]
+                rate = (base_rate + accel * dt) * amp
+                gas_true[k] = gas_true[k - 1] + rate + rng.normal(0, 0.4)
+
+                # --- can a human catch it in time? ---
+                observed = attenuation * gas_true[k]
+                if observed >= NOTICE_LEL:
+                    p = P_DETECT_BASE
+                    if night_shift:
+                        p *= NIGHT_FACTOR
+                    if in_changeover[k]:
+                        p *= CHANGEOVER_FACTOR
+                    # concern raised before handover but never passed on
+                    if (handover_lost and leak_start < t_change <= k
+                            and k - t_change < HANDOVER_LOSS_MINUTES):
+                        p *= HANDOVER_LOSS_FACTOR
+                    if rng.random() < p:
+                        intervened_at = k
+            else:
+                # leak isolated -> ventilation brings the zone back down
+                gas_true[k] = max(
+                    C.GAS_NORMAL_MEAN, gas_true[k - 1] * VENT_DECAY
+                ) + rng.normal(0, 0.25)
         gas_true = gas_true.clip(min=0)
 
     # ---- correlated signals driven by the TRUE hazard -----------------------
@@ -101,10 +160,6 @@ def simulate_episode(scenario: str, rng: np.random.Generator, episode_id: int = 
     vibration = _ar1(n, 1.0, 0.08, 0.6, rng) + 0.7 * maintenance_active + 0.008 * excess
 
     # ---- single point sensor: attenuated, noisy view of gas_true ------------
-    if scenario == "compound_hidden":
-        attenuation = rng.uniform(0.40, 0.60)   # poor placement / disturbed airflow
-    else:
-        attenuation = rng.uniform(0.80, 0.96)
     gas_sensor = (attenuation * gas_true + rng.normal(0, 0.7, n)).clip(min=0)
 
     # harmless transient sensor spikes (glitches) -> the baseline's false alarms
@@ -137,8 +192,11 @@ def simulate_episode(scenario: str, rng: np.random.Generator, episode_id: int = 
         "hot_work_permit": hot_work,
         "confined_space_permit": confined_space,
         "night_shift": night_shift,
+        "in_changeover": in_changeover,
+        "mins_since_changeover": mins_since_changeover,
         "workers_in_zone": workers,
         "leak_active": leak_active,
+        "intervened_at": intervened_at,     # -1 if the leak was never isolated
         "incident": incident_any.astype(int),
     })
     df["incident_onset"] = onset          # -1 if no incident in this episode

@@ -1,16 +1,16 @@
 ==================================================================
   SENTINELAI SCOREBOARD  --  single-sensor baseline vs compound AI
 ==================================================================
-  episodes: 250  (incidents: 111, safe: 139)
+  episodes: 300  (incidents: 64, safe: 133)
 ------------------------------------------------------------------
   metric                                  baseline    SentinelAI
 ------------------------------------------------------------------
-  Incident detection rate                    85.6%        100.0%
-  False-negative rate (missed)               14.4%          0.0%
-  Lead time (matched incidents)           41.7 min      40.3 min
-  False-alarm rate (safe zones)              41.0%         15.8%
-  Nuisance alarm-minutes                       133            42
+  Incident detection rate                    73.4%         98.4%
+  False-negative rate (missed)               26.6%          1.6%
+  Lead time (matched incidents)           27.3 min      12.9 min
+  False-alarm rate (safe zones)              54.9%         10.5%
+  Nuisance alarm-minutes                       195            21
 ------------------------------------------------------------------
-  >> Incidents the baseline MISSED that SentinelAI caught: 16
+  >> Incidents the baseline MISSED that SentinelAI caught: 17
      (each miss = a compound event a single sensor could not see)
 ==================================================================
