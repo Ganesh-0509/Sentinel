@@ -25,8 +25,11 @@ from sentinel.ml.features import FEATURE_COLUMNS
 
 
 class AnomalyDetector:
-    def __init__(self, n_components: int = 6, contamination: float = 0.02):
-        self.features = list(FEATURE_COLUMNS)
+    def __init__(self, n_components: int = 6, contamination: float = 0.02,
+                 features: list[str] | None = None):
+        # `features` lets the same detector run over a different variable set --
+        # used to validate the method unchanged on external benchmark data.
+        self.features = list(features) if features is not None else list(FEATURE_COLUMNS)
         self.scaler = StandardScaler()
         self.iforest = IsolationForest(
             n_estimators=200, contamination=contamination,

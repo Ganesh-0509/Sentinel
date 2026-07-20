@@ -1,0 +1,292 @@
+{
+  "dataset": "Tennessee Eastman Process (Braatz distribution)",
+  "note": "TEP faults are injected disturbances with no precursor phase, so this benchmark validates DETECTION of process abnormality, not the lead-time claim. Faults 3, 9 and 15 are excluded from headline averages as established-undetectable.",
+  "arm_a_anomaly_detector": {
+    "threshold": 5.600123004620072,
+    "false_alarm_rate_normal": 0.010416666666666666,
+    "mean_detection_detectable": 0.8465277777777778,
+    "mean_detection_all": 0.7285119047619047,
+    "median_delay_min_detectable": 31.5,
+    "faults_missed": [],
+    "per_fault": [
+      {
+        "fault": 1,
+        "known_undetectable": false,
+        "detection_rate": 0.9975,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 2,
+        "detection_delay_min": 6
+      },
+      {
+        "fault": 2,
+        "known_undetectable": false,
+        "detection_rate": 0.98625,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 11,
+        "detection_delay_min": 33
+      },
+      {
+        "fault": 3,
+        "known_undetectable": true,
+        "detection_rate": 0.015,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 59,
+        "detection_delay_min": 177
+      },
+      {
+        "fault": 4,
+        "known_undetectable": false,
+        "detection_rate": 1.0,
+        "false_alarm_rate": 0.006666666666666667,
+        "detection_delay_samples": 0,
+        "detection_delay_min": 0
+      },
+      {
+        "fault": 5,
+        "known_undetectable": false,
+        "detection_rate": 0.29625,
+        "false_alarm_rate": 0.006666666666666667,
+        "detection_delay_samples": 1,
+        "detection_delay_min": 3
+      },
+      {
+        "fault": 6,
+        "known_undetectable": false,
+        "detection_rate": 1.0,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 0,
+        "detection_delay_min": 0
+      },
+      {
+        "fault": 7,
+        "known_undetectable": false,
+        "detection_rate": 1.0,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 0,
+        "detection_delay_min": 0
+      },
+      {
+        "fault": 8,
+        "known_undetectable": false,
+        "detection_rate": 0.9775,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 18,
+        "detection_delay_min": 54
+      },
+      {
+        "fault": 9,
+        "known_undetectable": true,
+        "detection_rate": 0.01,
+        "false_alarm_rate": 0.06666666666666667,
+        "detection_delay_samples": 777,
+        "detection_delay_min": 2331
+      },
+      {
+        "fault": 10,
+        "known_undetectable": false,
+        "detection_rate": 0.6375,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 25,
+        "detection_delay_min": 75
+      },
+      {
+        "fault": 11,
+        "known_undetectable": false,
+        "detection_rate": 0.94625,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 6,
+        "detection_delay_min": 18
+      },
+      {
+        "fault": 12,
+        "known_undetectable": false,
+        "detection_rate": 0.9975,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 2,
+        "detection_delay_min": 6
+      },
+      {
+        "fault": 13,
+        "known_undetectable": false,
+        "detection_rate": 0.9525,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 38,
+        "detection_delay_min": 114
+      },
+      {
+        "fault": 14,
+        "known_undetectable": false,
+        "detection_rate": 0.99875,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 1,
+        "detection_delay_min": 3
+      },
+      {
+        "fault": 15,
+        "known_undetectable": true,
+        "detection_rate": 0.03625,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 659,
+        "detection_delay_min": 1977
+      },
+      {
+        "fault": 16,
+        "known_undetectable": false,
+        "detection_rate": 0.6625,
+        "false_alarm_rate": 0.02,
+        "detection_delay_samples": 23,
+        "detection_delay_min": 69
+      },
+      {
+        "fault": 17,
+        "known_undetectable": false,
+        "detection_rate": 0.965,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 24,
+        "detection_delay_min": 72
+      },
+      {
+        "fault": 18,
+        "known_undetectable": false,
+        "detection_rate": 0.9,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 83,
+        "detection_delay_min": 249
+      },
+      {
+        "fault": 19,
+        "known_undetectable": false,
+        "detection_rate": 0.84875,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 10,
+        "detection_delay_min": 30
+      },
+      {
+        "fault": 20,
+        "known_undetectable": false,
+        "detection_rate": 0.6525,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 86,
+        "detection_delay_min": 258
+      },
+      {
+        "fault": 21,
+        "known_undetectable": false,
+        "detection_rate": 0.41875,
+        "false_alarm_rate": 0.0,
+        "detection_delay_samples": 462,
+        "detection_delay_min": 1386
+      }
+    ]
+  },
+  "arm_b_feature_pipeline": {
+    "train_faults": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "test_faults": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "threshold": 0.9988634144643307,
+    "mean_auc_detectable": 0.8617941666666666,
+    "mean_detection_detectable": 0.373375,
+    "mean_false_alarm": 0.004666666666666667,
+    "per_fault": [
+      {
+        "fault": 11,
+        "known_undetectable": false,
+        "roc_auc": 0.8483583333333333,
+        "detection_rate": 0.2325,
+        "false_alarm_rate": 0.006666666666666667
+      },
+      {
+        "fault": 12,
+        "known_undetectable": false,
+        "roc_auc": 0.9997416666666666,
+        "detection_rate": 0.94625,
+        "false_alarm_rate": 0.0
+      },
+      {
+        "fault": 13,
+        "known_undetectable": false,
+        "roc_auc": 0.999475,
+        "detection_rate": 0.74125,
+        "false_alarm_rate": 0.0
+      },
+      {
+        "fault": 14,
+        "known_undetectable": false,
+        "roc_auc": 0.8024749999999999,
+        "detection_rate": 0.05375,
+        "false_alarm_rate": 0.0
+      },
+      {
+        "fault": 15,
+        "known_undetectable": true,
+        "roc_auc": 0.78885,
+        "detection_rate": 0.03375,
+        "false_alarm_rate": 0.0
+      },
+      {
+        "fault": 16,
+        "known_undetectable": false,
+        "roc_auc": 0.769,
+        "detection_rate": 0.24,
+        "false_alarm_rate": 0.04
+      },
+      {
+        "fault": 17,
+        "known_undetectable": false,
+        "roc_auc": 0.9541833333333334,
+        "detection_rate": 0.47875,
+        "false_alarm_rate": 0.0
+      },
+      {
+        "fault": 18,
+        "known_undetectable": false,
+        "roc_auc": 0.9398583333333334,
+        "detection_rate": 0.8775,
+        "false_alarm_rate": 0.0
+      },
+      {
+        "fault": 19,
+        "known_undetectable": false,
+        "roc_auc": 0.7324250000000001,
+        "detection_rate": 0.00375,
+        "false_alarm_rate": 0.0
+      },
+      {
+        "fault": 20,
+        "known_undetectable": false,
+        "roc_auc": 0.974575,
+        "detection_rate": 0.16,
+        "false_alarm_rate": 0.0
+      },
+      {
+        "fault": 21,
+        "known_undetectable": false,
+        "roc_auc": 0.59785,
+        "detection_rate": 0.0,
+        "false_alarm_rate": 0.0
+      }
+    ]
+  }
+}

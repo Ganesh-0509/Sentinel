@@ -17,7 +17,7 @@ synthetic data?"
 
 | Dataset | Why we use it | Access | Direct source |
 |---|---|---|---|
-| **Tennessee Eastman Process (TEP)** | Chemical process with ~20 fault types → perfect analog for "process abnormality precedes incident." Validate the LSTM-Autoencoder here. | **Free** (CSV) | [Kaggle CSV](https://www.kaggle.com/datasets/afrniomelo/tep-csv) · [GitHub (all 21 faults)](https://github.com/mv-per/tennessee-eastman-dataset) |
+| **Tennessee Eastman Process (TEP)** ✅ **USED** | Real chemical-process benchmark, 21 fault types, 52 variables. Validates the anomaly detector and the feature pipeline outside our own simulator. | **Free** | [Braatz distribution (used)](https://github.com/camaramm/tennessee-eastman-profBraatz) · [Kaggle CSV](https://www.kaggle.com/datasets/afrniomelo/tep-csv) |
 | **HAI (HIL-based Augmented ICS)** | Realistic ICS testbed (steam turbine + pumped-storage), 79 sensor features @1 Hz, labelled anomalies. Multivariate = matches our fusion story. | **Free** | [github.com/icsdataset/hai](https://github.com/icsdataset/hai) |
 | **SWaT / WADI** | Gold-standard CPS anomaly benchmarks (water treatment/distribution). Cite as validation target. | **Gated** — request from SUTD iTrust; may not arrive in hackathon window. Do **not** depend on it. | [iTrust request](https://itrust.sutd.edu.sg/testbeds/secure-water-treatment-swat/) |
 
@@ -37,6 +37,26 @@ synthetic data?"
 | **DGMS circulars** | Mining-sector safety (breadth). | Public (Directorate General of Mines Safety). |
 
 ---
+
+## Validation status
+
+**TEP — done.** `scripts/validate_tep.py`, results in `reports/tep_validation.json`.
+Fetch with:
+
+```bash
+git clone --depth 1 https://github.com/camaramm/tennessee-eastman-profBraatz.git data/external/tep
+```
+
+Two arms: (A) the anomaly detector unchanged on TEP normal data → 84.7 % mean detection at
+1.0 % false alarms across the 18 detectable faults; (B) the feature pipeline + GBM trained on
+faults 1–10 and tested on unseen faults 11–21 → ROC-AUC 0.862 but only 37.3 % detection at a
+matched threshold, showing calibration does not transfer across processes.
+
+Note two things honestly: faults 3, 9 and 15 are established-undetectable in the literature and
+our detector independently scores them near zero (a validity check); and **TEP cannot validate
+the lead-time claim**, because its faults are injected disturbances with no precursor phase.
+
+**HAI — outstanding.** Closest remaining external check.
 
 ## Download helper (to be added in Phase 2)
 `scripts/fetch_datasets.py` will pull the **free** Tier-A/B sets (TEP CSV, HAI, UCI Gas) into

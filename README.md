@@ -54,6 +54,36 @@ A third finding is worth stating plainly because it is uncomfortable: incident c
 major safety intervention** — arguably the first thing a plant should do, before adding any
 intelligence layer.
 
+### External validation on real data — Tennessee Eastman
+
+Everything above is measured in a simulator we wrote. To test whether the *method* survives
+outside it, we ran our components unchanged on the **Tennessee Eastman Process** benchmark
+(Braatz distribution, University of Illinois) — a real chemical-process dataset we had no hand
+in designing. `scripts/validate_tep.py`
+
+| | Mean detection | False-alarm rate | Notes |
+|---|---:|---:|---|
+| **Anomaly detector** (unchanged, trained on TEP normal only) | **84.7 %** | 1.0 % | 18 detectable faults; median delay 32 min |
+| **Supervised pipeline** (trained faults 1–10, tested on **unseen** faults 11–21) | 37.3 % | 0.5 % | ROC-AUC **0.862** |
+
+**A validity check worth noting:** our detector independently scores faults 3, 9 and 15 at
+1.5 %, 1.0 % and 3.6 % — these are long established in the TEP literature as effectively
+undetectable. Reproducing that structure without being told about it is evidence the method
+behaves correctly, not just favourably.
+
+**The finding that matters most is self-critical.** On failure modes it has never seen, the
+**unsupervised detector (84.7 %) outperforms the supervised model (37.3 %) by 2.3×.** The
+supervised model still ranks well (AUC 0.862) — the signal is there — but its *calibration*
+does not transfer, so a fixed threshold collapses its recall.
+
+This is exactly the argument for the two-layer design: **supervised for known hazards,
+unsupervised for the unknown-unknowns.** We claimed that when we built it; on real data it
+holds. It also means any deployment must recalibrate the supervised layer per plant.
+
+**What TEP cannot validate:** its faults are injected disturbances with no precursor phase, so
+predicting them early is information-theoretically impossible. **TEP validates detection, not
+our lead-time claim.** That would need a benchmark where hazards develop over time.
+
 > **Why the baseline fails honestly.** It reads one point sensor, which can be attenuated by
 > placement or disturbed airflow — common during maintenance. SentinelAI fuses pressure,
 > temperature, vibration and operational context, so it sees hazards the point sensor cannot.
@@ -190,9 +220,10 @@ data/           regulation corpus (see licensing above)
 
 ## Status and limitations
 
-- Results are **simulator-derived**. They demonstrate that the reasoning and the
-  measurement methodology are sound; they are not a claim about a specific real plant.
-  External validation against the TEP and HAI datasets is documented in
-  [`DATASETS.md`](DATASETS.md) and is not yet run.
+- Plant results are **simulator-derived**. The *method* is externally validated on the
+  Tennessee Eastman benchmark (above); the *lead-time claim* is not, and cannot be on TEP.
+  HAI validation remains outstanding. See [`DATASETS.md`](DATASETS.md).
+- The supervised layer's calibration does not transfer across processes; it must be
+  recalibrated per plant.
 - The regulation corpus is partly stand-in (see licensing above).
 - Decision-support only. This system does not actuate plant equipment.
