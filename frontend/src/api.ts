@@ -4,9 +4,12 @@ import type {
   ComplianceAnswer,
   ContributingFactor,
   Health,
+  IncidentRecord,
   KpiSummary,
+  PatternSummary,
   PermitDecision,
   PermitType,
+  PreventionPriority,
   RiskDistribution,
   Scoreboard,
   TierSummary,
@@ -84,6 +87,14 @@ export const api = {
   trend: (window = 120) => request<TrendPoint[]>(`/analytics/trend?window=${window}`),
   contributingFactors: (top = 10) =>
     request<ContributingFactor[]>(`/analytics/contributing-factors?top=${top}`),
+
+  // incident intelligence
+  patterns: () => request<PatternSummary>('/incidents/patterns'),
+  priorities: () => request<PreventionPriority[]>('/incidents/priorities'),
+  incidentRecords: (outcome?: 'INCIDENT' | 'NEAR_MISS', limit = 40) =>
+    request<IncidentRecord[]>(
+      `/incidents/records?limit=${limit}${outcome ? `&outcome=${outcome}` : ''}`,
+    ),
 }
 
 export { ApiError }

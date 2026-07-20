@@ -18,6 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from sentinel import __version__
+from sentinel.config import GLOBAL_SEED as C_SEED
 from sentinel.api import schemas as S
 from sentinel.api.service import plant
 from sentinel.llm.provider import get_llm
@@ -57,6 +58,8 @@ app = FastAPI(
         {"name": "alerts", "description": "Prioritised alert queue."},
         {"name": "permits", "description": "Deterministic permit interlocks."},
         {"name": "compliance", "description": "RAG-grounded regulatory answers."},
+        {"name": "incidents", "description": "Incident / near-miss pattern intelligence."},
+        {"name": "analytics", "description": "Process safety and alarm performance indicators."},
         {"name": "workflow", "description": "Multi-agent safety workflow."},
         {"name": "evaluation", "description": "Baseline-vs-compound evidence."},
     ],
@@ -281,6 +284,46 @@ def analytics_factors(top: int = Query(10, ge=3, le=20)) -> list[dict]:
     _require_ready()
     from sentinel.analytics import contributing_factors
     return contributing_factors(plant.model, top=top)
+
+
+# ------------------------------------------------------- incident intelligence
+_INCIDENT_CACHE: dict = {}
+
+
+def _incident_corpus():
+    """Build (once) the incident / near-miss corpus and mined patterns."""
+    if "records" not in _INCIDENT_CACHE:
+        from sentinel.incidents.records import build_incident_corpus
+        from sentinel.incidents.patterns import mine_patterns, prevention_priorities
+        from sentinel.sim import generate_dataset
+        raw = generate_dataset(600, seed=C_SEED)
+        records = build_incident_corpus(raw)
+        mined = mine_patterns(records)
+        _INCIDENT_CACHE["records"] = records
+        _INCIDENT_CACHE["mined"] = mined
+        _INCIDENT_CACHE["priorities"] = prevention_priorities(mined)
+    return _INCIDENT_CACHE
+
+
+@api.get("/incidents/patterns", tags=["incidents"])
+def incident_patterns() -> dict:
+    """Recurring precursor patterns mined across the incident and near-miss corpus."""
+    return _incident_corpus()["mined"]
+
+
+@api.get("/incidents/priorities", tags=["incidents"])
+def incident_priorities() -> list[dict]:
+    """Highest-lift patterns translated into ranked prevention actions."""
+    return _incident_corpus()["priorities"]
+
+
+@api.get("/incidents/records", tags=["incidents"])
+def incident_records(outcome: str | None = Query(None, pattern="^(INCIDENT|NEAR_MISS)$"),
+                     limit: int = Query(40, ge=1, le=200)) -> list[dict]:
+    recs = _incident_corpus()["records"]
+    if outcome:
+        recs = [r for r in recs if r.outcome == outcome]
+    return [r.as_dict() for r in recs[:limit]]
 
 
 # ---------------------------------------------------------------- evaluation

@@ -1,0 +1,9 @@
+{
+  "startup_feature_ms_per_zone": 37.6,
+  "max_zones_tested": 1000,
+  "tick_total_ms_at_max": 234.7,
+  "zones_per_second_at_max": 4261.3,
+  "meets_1min_cadence_at_max": true,
+  "headroom_vs_1min_cadence": 255.6,
+  "note": "Compute-bound hot path only (features precomputed at startup). Excludes network ingest, database writes and multi-node effects."
+}

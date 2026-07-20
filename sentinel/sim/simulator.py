@@ -61,7 +61,8 @@ def _ar1(n, mean, sd, phi, rng):
     return x
 
 
-def simulate_episode(scenario: str, rng: np.random.Generator, episode_id: int = 0) -> pd.DataFrame:
+def simulate_episode(scenario: str, rng: np.random.Generator, episode_id: int = 0,
+                     attenuation_override: float | None = None) -> pd.DataFrame:
     """Simulate one 4-hour episode at 1-minute resolution.
 
     Returns a DataFrame with observable signals + operational context, plus the
@@ -107,7 +108,10 @@ def simulate_episode(scenario: str, rng: np.random.Generator, episode_id: int = 
 
     # ---- sensor placement / attenuation (decided up-front: the operator only
     #      sees the point sensor, so it also gates human detection) -----------
-    if scenario == "compound_hidden":
+    if attenuation_override is not None:
+        # sensitivity analysis: pin the accused parameter to a chosen level
+        attenuation = float(attenuation_override)
+    elif scenario == "compound_hidden":
         attenuation = rng.uniform(0.40, 0.60)   # poor placement / disturbed airflow
     else:
         attenuation = rng.uniform(0.80, 0.96)
@@ -203,8 +207,14 @@ def simulate_episode(scenario: str, rng: np.random.Generator, episode_id: int = 
     return df
 
 
-def generate_dataset(n_episodes: int, seed: int, mix: dict | None = None) -> pd.DataFrame:
-    """Generate a stacked DataFrame of many episodes following the scenario mix."""
+def generate_dataset(n_episodes: int, seed: int, mix: dict | None = None,
+                     attenuation_override: float | None = None) -> pd.DataFrame:
+    """Generate a stacked DataFrame of many episodes following the scenario mix.
+
+    `attenuation_override` pins the point-sensor attenuation for every episode; it
+    exists so the sensitivity analysis can sweep the parameter that most directly
+    determines whether the single-sensor baseline fails.
+    """
     mix = mix or SCENARIO_MIX
     rng = np.random.default_rng(seed)
     scenarios = list(mix.keys())
@@ -214,5 +224,6 @@ def generate_dataset(n_episodes: int, seed: int, mix: dict | None = None) -> pd.
     frames = []
     for ep in range(n_episodes):
         scen = rng.choice(scenarios, p=probs)
-        frames.append(simulate_episode(scen, rng, episode_id=ep))
+        frames.append(simulate_episode(scen, rng, episode_id=ep,
+                                       attenuation_override=attenuation_override))
     return pd.concat(frames, ignore_index=True)

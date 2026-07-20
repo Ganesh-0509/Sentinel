@@ -23,6 +23,16 @@ data/regulations_local/
 node_modules/
 frontend/dist/
 
+# Internal design documentation (SRS, architecture, roadmap, ingestion spec)
+# and the project explainer. Kept local, not published.
+0*_*.md
+PROJECT_EXPLAINER.md
+
+# Local agent tooling / installed skills
+.agents/
+.claude/
+skills-lock.json
+
 # OS / editor
 .DS_Store
 Thumbs.db

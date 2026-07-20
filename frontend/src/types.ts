@@ -193,6 +193,47 @@ export interface ContributingFactor {
   share: number
 }
 
+export interface PrecursorPattern {
+  conditions: string[]
+  label: string
+  occurrences: number
+  incidents: number
+  near_misses: number
+  confidence: number
+  lift: number
+  single_sensor_missed: number
+}
+
+export interface PatternSummary {
+  n_records: number
+  n_incidents: number
+  n_near_misses: number
+  base_incident_rate: number
+  min_support_count: number
+  patterns: PrecursorPattern[]
+  method: string
+}
+
+export interface PreventionPriority {
+  pattern: string
+  lift: number
+  occurrences: number
+  incidents: number
+  single_sensor_missed: number
+  actions: string[]
+}
+
+export interface IncidentRecord {
+  record_id: string
+  outcome: 'INCIDENT' | 'NEAR_MISS'
+  incident_type: string
+  zone: string
+  minute_of_event: number
+  severity: string
+  narrative: string
+  detected_by_single_sensor: boolean
+}
+
 export interface Health {
   status: 'ok' | 'degraded'
   version: string

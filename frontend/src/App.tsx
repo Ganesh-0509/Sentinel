@@ -4,6 +4,7 @@ import { Alerts } from './pages/Alerts'
 import { Analytics } from './pages/Analytics'
 import { Compliance } from './pages/Compliance'
 import { Evidence } from './pages/Evidence'
+import { Incidents } from './pages/Incidents'
 import { MapPage } from './pages/MapPage'
 import { Overview } from './pages/Overview'
 import { Permits } from './pages/Permits'
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="zones/:zoneId" element={<ZoneDetailPage />} />
           <Route path="alerts" element={<Alerts />} />
           <Route path="analytics" element={<Analytics />} />
+          <Route path="incidents" element={<Incidents />} />
           <Route path="permits" element={<Permits />} />
           <Route path="compliance" element={<Compliance />} />
           <Route path="evidence" element={<Evidence />} />

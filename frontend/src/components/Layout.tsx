@@ -7,6 +7,7 @@ const NAV = [
   { to: '/zones', label: 'Zones', glyph: '▤' },
   { to: '/alerts', label: 'Alerts', glyph: '▲' },
   { to: '/analytics', label: 'Analytics', glyph: '◴' },
+  { to: '/incidents', label: 'Incident Patterns', glyph: '◉' },
   { to: '/permits', label: 'Permits', glyph: '▦' },
   { to: '/compliance', label: 'Compliance', glyph: '§' },
   { to: '/evidence', label: 'Model Evidence', glyph: '◎' },
