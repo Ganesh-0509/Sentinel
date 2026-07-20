@@ -100,6 +100,99 @@ export interface Scoreboard {
   incidents_missed_by_baseline_caught_by_compound: number
 }
 
+export interface Kpi {
+  key: string
+  label: string
+  value: number
+  unit: string
+  kind: 'leading' | 'lagging'
+  hint: string
+  state: 'ok' | 'warn' | 'critical'
+}
+
+export interface KpiSummary {
+  kpis: Kpi[]
+  leading_count: number
+  lagging_count: number
+  leading_to_lagging_ratio: number
+  ratio_target: number
+  ratio_ok: boolean
+}
+
+export interface TierEvent {
+  zone_id: string
+  zone: string
+  event: string
+  detail: string
+}
+
+export interface Tier {
+  tier: number
+  name: string
+  kind: 'leading' | 'lagging'
+  external_reporting: boolean
+  count: number
+  events: TierEvent[]
+}
+
+export interface TierSummary {
+  framework: string
+  tiers: Tier[]
+  leading_events: number
+  lagging_events: number
+  note: string
+}
+
+export interface AlarmSystem {
+  system: string
+  alarm_minutes: number
+  false_alarm_rate: number
+  alarms_per_zone_hour: number
+  alarms_per_operator_hour: number
+  band: 'TARGET' | 'ACCEPTABLE' | 'OVER_TARGET' | 'SERIOUSLY_DEFICIENT'
+  within_eemua_target: boolean
+}
+
+export interface AlarmPerformance {
+  available: boolean
+  framework?: string
+  benchmarks?: {
+    target_per_hour: number
+    seriously_deficient_per_hour: number
+    peak_per_10min: number
+  }
+  systems?: AlarmSystem[]
+  nuisance_reduction_pct?: number
+  monitored_points?: number
+  projection_note?: string
+}
+
+export interface RiskDistribution {
+  bands: { band: RiskBand; count: number }[]
+  by_zone: {
+    zone_id: string
+    zone: string
+    risk: number
+    band: RiskBand
+    workers: number
+  }[]
+}
+
+export interface TrendPoint {
+  minute: number
+  max_risk: number
+  mean_risk: number
+  zones_at_risk: number
+}
+
+export interface ContributingFactor {
+  feature: string
+  label: string
+  group: string
+  importance: number
+  share: number
+}
+
 export interface Health {
   status: 'ok' | 'degraded'
   version: string

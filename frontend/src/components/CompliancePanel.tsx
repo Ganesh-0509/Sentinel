@@ -43,9 +43,12 @@ export function CompliancePanel() {
         <label htmlFor="q" className="sr-only">Compliance question</label>
         <input
           id="q"
+          name="compliance-question"
+          type="text"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Ask about a regulation…"
+          autoComplete="off"
           className="flex-1 rounded border border-ink-600 bg-ink-900 px-2.5 py-1.5 text-[11px] text-slate-200 placeholder:text-slate-600"
         />
         <button

@@ -9,9 +9,19 @@
     height: 100%;
   }
 
+  html {
+    /* Native controls (scrollbars, selects, range inputs) render dark */
+    color-scheme: dark;
+  }
+
   body {
     @apply bg-ink-900 text-slate-200 antialiased;
     font-feature-settings: 'tnum' 1;
+  }
+
+  h1,
+  h2 {
+    text-wrap: balance;
   }
 
   /* Respect reduced-motion preferences (WCAG 2.3.3) */
@@ -50,5 +60,10 @@
 
   .chip {
     @apply inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide;
+  }
+
+  /* Keyboard skip link — visible only when focused */
+  .skip-link {
+    @apply absolute left-3 top-3 z-50 -translate-y-16 rounded bg-sky-600 px-3 py-2 text-[12px] text-white transition focus:translate-y-0;
   }
 }

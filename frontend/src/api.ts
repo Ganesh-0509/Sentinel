@@ -1,10 +1,16 @@
 import type {
+  AlarmPerformance,
   AlertItem,
   ComplianceAnswer,
+  ContributingFactor,
   Health,
+  KpiSummary,
   PermitDecision,
   PermitType,
+  RiskDistribution,
   Scoreboard,
+  TierSummary,
+  TrendPoint,
   WorkflowResult,
   ZoneReading,
   ZoneState,
@@ -69,6 +75,15 @@ export const api = {
   runWorkflow: (zoneId: string) =>
     request<WorkflowResult>(`/workflow/run/${zoneId}`, { method: 'POST' }),
   scoreboard: () => request<Scoreboard>('/evaluation/scoreboard'),
+
+  // analytics
+  kpis: () => request<KpiSummary>('/analytics/kpis'),
+  tiers: () => request<TierSummary>('/analytics/tiers'),
+  alarmPerformance: () => request<AlarmPerformance>('/analytics/alarm-performance'),
+  riskDistribution: () => request<RiskDistribution>('/analytics/risk-distribution'),
+  trend: (window = 120) => request<TrendPoint[]>(`/analytics/trend?window=${window}`),
+  contributingFactors: (top = 10) =>
+    request<ContributingFactor[]>(`/analytics/contributing-factors?top=${top}`),
 }
 
 export { ApiError }

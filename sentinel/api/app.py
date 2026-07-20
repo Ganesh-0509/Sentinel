@@ -232,6 +232,57 @@ def run_workflow(zone_id: str) -> S.WorkflowResponse:
     )
 
 
+# ------------------------------------------------------------------ analytics
+def _scoreboard_dict() -> dict | None:
+    path = ROOT / "reports" / "scoreboard.json"
+    return json.loads(path.read_text()) if path.exists() else None
+
+
+@api.get("/analytics/kpis", tags=["analytics"])
+def analytics_kpis() -> dict:
+    """Headline KPIs tagged leading vs lagging (3:1 ratio is the target)."""
+    _require_ready()
+    from sentinel.analytics import kpi_summary
+    return kpi_summary(plant.zone_states(), _scoreboard_dict())
+
+
+@api.get("/analytics/tiers", tags=["analytics"])
+def analytics_tiers() -> dict:
+    """Current conditions classified into the API RP 754 tier structure."""
+    _require_ready()
+    from sentinel.analytics import tier_events
+    return tier_events(plant.zone_states(), _scoreboard_dict())
+
+
+@api.get("/analytics/alarm-performance", tags=["analytics"])
+def analytics_alarms() -> dict:
+    """Alarm load benchmarked against EEMUA 191 / ISA-18.2."""
+    from sentinel.analytics import alarm_performance
+    return alarm_performance(_scoreboard_dict())
+
+
+@api.get("/analytics/risk-distribution", tags=["analytics"])
+def analytics_distribution() -> dict:
+    _require_ready()
+    from sentinel.analytics import risk_distribution
+    return risk_distribution(plant.zone_states())
+
+
+@api.get("/analytics/trend", tags=["analytics"])
+def analytics_trend(window: int = Query(120, ge=20, le=240)) -> list[dict]:
+    _require_ready()
+    from sentinel.analytics import risk_trend
+    series = {z.zone_id: z.proba for z in plant.zones}
+    return risk_trend(series, plant.minute, window)
+
+
+@api.get("/analytics/contributing-factors", tags=["analytics"])
+def analytics_factors(top: int = Query(10, ge=3, le=20)) -> list[dict]:
+    _require_ready()
+    from sentinel.analytics import contributing_factors
+    return contributing_factors(plant.model, top=top)
+
+
 # ---------------------------------------------------------------- evaluation
 @api.get("/evaluation/scoreboard", response_model=S.ScoreboardResponse, tags=["evaluation"])
 def scoreboard() -> S.ScoreboardResponse:
