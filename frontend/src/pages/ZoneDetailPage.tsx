@@ -27,7 +27,7 @@ export function ZoneDetailPage() {
         actions={
           <Link
             to="/zones"
-            className="rounded border border-ink-600 px-2.5 py-1 text-[11px] text-slate-400 hover:text-slate-200"
+            className="rounded border border-ink-600 px-2.5 py-1 text-[13px] text-slate-400 hover:text-slate-200"
           >
             ← All zones
           </Link>

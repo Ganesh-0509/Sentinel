@@ -32,7 +32,7 @@ export function ZoneDetail({ zone, history }: Props) {
           <h2 className="panel-title">{zone.name}</h2>
           <span className={`chip ${bandBadge[zone.risk_band]}`}>{zone.risk_band}</span>
         </div>
-        <div className="flex items-center gap-3 text-[11px]">
+        <div className="flex items-center gap-3 text-[13px]">
           <span className="stat text-slate-400">
             risk <span className="text-slate-100">{(zone.risk * 100).toFixed(1)}%</span>
           </span>
@@ -105,7 +105,7 @@ export function ZoneDetail({ zone, history }: Props) {
       <div className="flex-1 overflow-y-auto px-4 pb-3 pt-2">
         <h3 className="panel-title mb-2">Why — SHAP attribution</h3>
         {zone.drivers.length === 0 ? (
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[13px] text-slate-500">
             Risk below explanation threshold.
           </p>
         ) : (
@@ -113,7 +113,7 @@ export function ZoneDetail({ zone, history }: Props) {
             {zone.drivers.map((d) => {
               const mag = Math.min(Math.abs(d.contribution) / 2, 1)
               return (
-                <li key={d.feature} className="text-[11px]">
+                <li key={d.feature} className="text-[13px]">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-slate-300">{d.label}</span>
                     <span
@@ -148,9 +148,9 @@ function Metric({ label, value, sub, alert }: {
 }) {
   return (
     <div className="bg-ink-800 px-3 py-2">
-      <p className="text-[10px] uppercase tracking-wide text-slate-500">{label}</p>
+      <p className="text-[11.5px] uppercase tracking-wide text-slate-500">{label}</p>
       <p className={`stat text-sm ${alert ? 'text-amber-300' : 'text-slate-100'}`}>{value}</p>
-      {sub && <p className="stat text-[10px] text-slate-500">{sub}</p>}
+      {sub && <p className="stat text-[11.5px] text-slate-500">{sub}</p>}
     </div>
   )
 }

@@ -59,6 +59,7 @@ app = FastAPI(
         {"name": "permits", "description": "Deterministic permit interlocks."},
         {"name": "compliance", "description": "RAG-grounded regulatory answers."},
         {"name": "incidents", "description": "Incident / near-miss pattern intelligence."},
+        {"name": "graph", "description": "Equipment-permit-hazard-regulation knowledge graph."},
         {"name": "analytics", "description": "Process safety and alarm performance indicators."},
         {"name": "workflow", "description": "Multi-agent safety workflow."},
         {"name": "evaluation", "description": "Baseline-vs-compound evidence."},
@@ -284,6 +285,54 @@ def analytics_factors(top: int = Query(10, ge=3, le=20)) -> list[dict]:
     _require_ready()
     from sentinel.analytics import contributing_factors
     return contributing_factors(plant.model, top=top)
+
+
+# ------------------------------------------------------------ knowledge graph
+def _graph():
+    """Rebuilt per request — the graph reflects live permit and staffing state."""
+    from sentinel.graph.builder import build_graph
+    return build_graph(plant.zone_states())
+
+
+@api.get("/graph", tags=["graph"])
+def graph_snapshot() -> dict:
+    """Full equipment / permit / hazard / regulation graph for the current instant."""
+    _require_ready()
+    return _graph().to_dict()
+
+
+@api.get("/graph/blast-radius/{zone_id}", tags=["graph"])
+def blast_radius(zone_id: str, max_hops: int = Query(2, ge=1, le=4)) -> dict:
+    """Which connected zones are endangered by a release here, and who is in them.
+
+    A per-zone view cannot answer this: gas travels along shared headers, so exposure
+    is the reachable set, not the zone.
+    """
+    _require_ready()
+    g = _graph()
+    if zone_id not in g.nodes:
+        raise HTTPException(404, f"unknown zone '{zone_id}'")
+    return g.blast_radius(zone_id, max_hops=max_hops)
+
+
+@api.get("/graph/permits-to-suspend/{zone_id}", tags=["graph"])
+def permits_to_suspend(zone_id: str, max_hops: int = Query(2, ge=1, le=4)) -> list[dict]:
+    """Every permit needing review if this zone goes critical, including adjacent zones."""
+    _require_ready()
+    g = _graph()
+    if zone_id not in g.nodes:
+        raise HTTPException(404, f"unknown zone '{zone_id}'")
+    return g.permits_to_suspend(zone_id, max_hops=max_hops)
+
+
+@api.get("/graph/path/{source}/{target}", tags=["graph"])
+def graph_path(source: str, target: str) -> dict:
+    """Shortest relationship path — shows *why* two entities are connected."""
+    _require_ready()
+    path = _graph().explain_path(source, target)
+    if path is None:
+        raise HTTPException(404, "no path between those nodes")
+    return {"source": source, "target": target, "hops": len(path), "path": path}
 
 
 # ------------------------------------------------------- incident intelligence

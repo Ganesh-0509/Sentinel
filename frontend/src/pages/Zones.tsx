@@ -74,7 +74,7 @@ export function Zones() {
             aria-label="Filter zones by name or identifier"
             autoComplete="off"
             spellCheck={false}
-            className="rounded border border-ink-600 bg-ink-900 px-2.5 py-1.5 text-[11px] text-slate-200 placeholder:text-slate-600"
+            className="rounded border border-ink-600 bg-ink-900 px-2.5 py-1.5 text-[13px] text-slate-200 placeholder:text-slate-600"
           />
         }
       />
@@ -84,7 +84,7 @@ export function Zones() {
           <button
             key={f.key}
             onClick={() => setFilter(f.key)}
-            className={`rounded border px-2.5 py-1 text-[11px] transition ${
+            className={`rounded border px-2.5 py-1 text-[13px] transition ${
               filter === f.key
                 ? 'border-sky-500/50 bg-sky-500/15 text-sky-200'
                 : 'border-ink-600 bg-ink-700/50 text-slate-400 hover:text-slate-200'
@@ -98,9 +98,9 @@ export function Zones() {
 
       <Panel>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[860px] text-[11.5px]">
+          <table className="w-full min-w-[860px] text-[13.5px]">
             <thead>
-              <tr className="border-b border-ink-600 text-left text-[10px] uppercase tracking-wide text-slate-500">
+              <tr className="border-b border-ink-600 text-left text-[11.5px] uppercase tracking-wide text-slate-500">
                 <th className="px-4 py-2 font-medium">Zone</th>
                 <th className="px-3 py-2 font-medium">Risk</th>
                 <th className="px-3 py-2 font-medium">Band</th>
@@ -122,7 +122,7 @@ export function Zones() {
                     >
                       {z.name}
                     </Link>
-                    <span className="ml-2 font-mono text-[10px] text-slate-600">
+                    <span className="ml-2 font-mono text-[11.5px] text-slate-600">
                       {z.zone_id}
                     </span>
                   </td>
@@ -203,7 +203,7 @@ export function Zones() {
         </div>
       </Panel>
 
-      <p className="mt-2 text-[10.5px] text-slate-500">
+      <p className="mt-2 text-[12.5px] text-slate-500">
         <span className="text-amber-300">Silent</span> means the compound model is at HIGH
         or CRITICAL risk while a conventional single-sensor gas alarm would not be firing —
         the failure mode this system exists to close.

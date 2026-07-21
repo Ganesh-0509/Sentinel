@@ -8,6 +8,7 @@ const NAV = [
   { to: '/alerts', label: 'Alerts', glyph: '▲' },
   { to: '/analytics', label: 'Analytics', glyph: '◴' },
   { to: '/incidents', label: 'Incident Patterns', glyph: '◉' },
+  { to: '/graph', label: 'Knowledge Graph', glyph: '⬡' },
   { to: '/permits', label: 'Permits', glyph: '▦' },
   { to: '/compliance', label: 'Compliance', glyph: '§' },
   { to: '/evidence', label: 'Model Evidence', glyph: '◎' },
@@ -27,7 +28,7 @@ export function Layout() {
           <p className="text-sm font-semibold tracking-wide text-slate-100">
             SENTINEL<span className="text-sky-400">AI</span>
           </p>
-          <p className="mt-0.5 text-[10px] leading-tight text-slate-500">
+          <p className="mt-0.5 text-[11.5px] leading-tight text-slate-500">
             Compound Safety Intelligence
           </p>
         </div>
@@ -39,7 +40,7 @@ export function Layout() {
               to={n.to}
               end={n.end}
               className={({ isActive }) =>
-                `flex items-center justify-between rounded px-3 py-2 text-[12px] transition ${
+                `flex items-center justify-between rounded px-3 py-2 text-[14px] transition ${
                   isActive
                     ? 'bg-sky-500/15 text-sky-200'
                     : 'text-slate-400 hover:bg-ink-700/60 hover:text-slate-200'
@@ -52,7 +53,7 @@ export function Layout() {
               </span>
               {n.to === '/alerts' && critical > 0 && (
                 <span
-                  className="rounded bg-red-500/20 px-1.5 text-[10px] font-semibold text-red-300"
+                  className="rounded bg-red-500/20 px-1.5 text-[11.5px] font-semibold text-red-300"
                   aria-live="polite"
                   aria-label={`${critical} critical alerts`}
                 >
@@ -63,7 +64,7 @@ export function Layout() {
           ))}
         </nav>
 
-        <div className="border-t border-ink-600 p-3 text-[10px] text-slate-500">
+        <div className="border-t border-ink-600 p-3 text-[11.5px] text-slate-500">
           <div className="flex items-center gap-1.5">
             <span
               className={`h-1.5 w-1.5 rounded-full ${
@@ -80,7 +81,7 @@ export function Layout() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center justify-between gap-4 border-b border-ink-600 bg-ink-800/40 px-5 py-2.5">
-          <div className="flex items-center gap-2 text-[11px] text-slate-500">
+          <div className="flex items-center gap-2 text-[13px] text-slate-500">
             <span className="rounded border border-ink-600 px-2 py-0.5 font-mono text-slate-300">
               Visakhapatnam Works
             </span>
@@ -88,7 +89,7 @@ export function Layout() {
           </div>
 
           <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 text-[11px] text-slate-400">
+            <label className="flex items-center gap-2 text-[13px] text-slate-400">
               <span className="stat w-12 text-right text-slate-200">T+{minute}m</span>
               <input
                 type="range"
@@ -102,7 +103,7 @@ export function Layout() {
             </label>
             <button
               onClick={() => setLive(!live)}
-              className={`rounded px-3 py-1 text-[11px] font-medium transition ${
+              className={`rounded px-3 py-1 text-[13px] font-medium transition ${
                 live
                   ? 'bg-red-600 text-white hover:bg-red-500'
                   : 'bg-emerald-600 text-white hover:bg-emerald-500'
@@ -114,7 +115,7 @@ export function Layout() {
         </header>
 
         {error && (
-          <div className="border-b border-red-500/30 bg-red-500/10 px-5 py-1.5 text-[11px] text-red-200">
+          <div className="border-b border-red-500/30 bg-red-500/10 px-5 py-1.5 text-[13px] text-red-200">
             {error} — is the API running on :8000?
           </div>
         )}
@@ -123,7 +124,7 @@ export function Layout() {
           <Outlet />
         </main>
 
-        <footer className="border-t border-ink-600 px-5 py-2 text-[10px] text-slate-600">
+        <footer className="border-t border-ink-600 px-5 py-2 text-[11.5px] text-slate-600">
           Decision-support only. Deterministic gas and oxygen interlocks hold veto
           authority; the model may escalate or reject work but never approves work the
           interlocks rejected.

@@ -8,7 +8,7 @@ export function PageHeader({ title, subtitle, actions }: {
     <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
       <div>
         <h1 className="text-base font-semibold text-slate-100">{title}</h1>
-        {subtitle && <p className="mt-0.5 text-[11.5px] text-slate-500">{subtitle}</p>}
+        {subtitle && <p className="mt-0.5 text-[13.5px] text-slate-500">{subtitle}</p>}
       </div>
       {actions}
     </div>
@@ -47,7 +47,7 @@ export function KpiCard({ kpi }: { kpi: Kpi }) {
   return (
     <div className={`rounded-lg border bg-ink-800/80 p-3 ${STATE_RING[kpi.state]}`}>
       <div className="flex items-start justify-between gap-2">
-        <p className="text-[10px] uppercase tracking-wide text-slate-500">{kpi.label}</p>
+        <p className="text-[11.5px] uppercase tracking-wide text-slate-500">{kpi.label}</p>
         <span
           className={`chip shrink-0 ${
             kpi.kind === 'leading'
@@ -60,15 +60,15 @@ export function KpiCard({ kpi }: { kpi: Kpi }) {
       </div>
       <p className={`stat mt-1 text-xl ${STATE_TEXT[kpi.state]}`}>
         {kpi.value}
-        <span className="ml-1 text-[11px] text-slate-500">{kpi.unit}</span>
+        <span className="ml-1 text-[13px] text-slate-500">{kpi.unit}</span>
       </p>
-      <p className="mt-1 text-[10.5px] leading-snug text-slate-500">{kpi.hint}</p>
+      <p className="mt-1 text-[12.5px] leading-snug text-slate-500">{kpi.hint}</p>
     </div>
   )
 }
 
 export function Empty({ children }: { children: ReactNode }) {
-  return <p className="px-4 py-8 text-center text-[11px] text-slate-500">{children}</p>
+  return <p className="px-4 py-8 text-center text-[13px] text-slate-500">{children}</p>
 }
 
 export function Bar({ value, max = 1, tone = 'sky' }: {

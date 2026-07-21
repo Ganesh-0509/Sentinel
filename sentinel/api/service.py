@@ -126,17 +126,33 @@ class PlantService:
 
     # ------------------------------------------------------------------ state
     def _lead_time(self, z: ZoneRuntime, i: int) -> int | None:
-        """Minutes until the model's probability is expected to cross threshold.
+        """Projected minutes to threshold, from OBSERVABLE signals only.
 
-        Reported only while the zone is already above threshold; derived from the
-        forecast horizon rather than peeking at ground truth.
+        This must never read `incident_onset`. That column is the simulator's hidden
+        ground truth; in a live plant the remaining time to an incident is precisely
+        the thing nobody knows. Reporting it would make the dashboard look prescient
+        while being unimplementable in the field.
+
+        What we can honestly say has two parts:
+          1. The model's own claim -- it predicts an incident within PRIMARY_HORIZON,
+             so that horizon is the upper bound on the estimate.
+          2. A physical extrapolation -- the observed gas reading rising at the observed
+             trend reaches the alarm limit in (limit - gas) / trend minutes.
+
+        We report the tighter of the two, floored at one minute. Both inputs are
+        available from the sensor feed alone.
         """
         if self.model is None or z.proba[i] < self.model.threshold:
             return None
-        onset = int(z.episode["incident_onset"].iloc[0])
-        if onset > i:
-            return int(onset - i)
-        return int(C.PRIMARY_HORIZON)
+
+        gas = float(z.episode["gas_sensor"].iloc[i])
+        trend = float(z.features["gas_trend"].iloc[i])      # %LEL per minute, observed
+
+        projected = float(C.PRIMARY_HORIZON)
+        if trend > 0.01 and gas < C.GAS_HIGH_ALARM:
+            projected = (C.GAS_HIGH_ALARM - gas) / trend
+
+        return int(max(1, min(projected, C.PRIMARY_HORIZON)))
 
     def zone_states(self) -> list[dict]:
         i = self.minute

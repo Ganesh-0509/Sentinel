@@ -25,31 +25,52 @@ export function Evidence() {
           {board && (
             <Panel title="Compared at equal nuisance">
               <div className="p-4">
-                <p className="mb-3 text-[10.5px] leading-snug text-slate-500">
+                <p className="mb-3 text-[13px] leading-relaxed text-slate-400">
                   A low fixed-threshold alarm buys lead time by alarming constantly, so the
                   two systems must be compared at the <em>same</em> false-alarm rate — not at
                   whatever operating point each happens to use.
                 </p>
-                <div className="grid grid-cols-2 gap-px rounded border border-ink-600 bg-ink-600">
-                  <div className="bg-ink-800 p-3">
-                    <p className="text-[10px] uppercase tracking-wide text-slate-500">
+                <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-ink-600 bg-ink-600">
+                  <div className="bg-ink-800 p-4">
+                    <p className="text-[13px] uppercase tracking-wide text-slate-500">
                       Single-sensor baseline
                     </p>
-                    <p className="stat mt-1 text-lg text-slate-400">73.4%</p>
-                    <p className="text-[10.5px] text-slate-600">detection · 27.3 min lead</p>
+                    <p className="stat mt-1.5 text-2xl text-slate-400">
+                      {(board.baseline_detection_rate * 100).toFixed(1)}%
+                    </p>
+                    <p className="mt-0.5 text-[14px] text-slate-500">
+                      detection ·{' '}
+                      {board.matched_baseline_lead_min
+                        ? `${board.matched_baseline_lead_min.toFixed(1)} min lead`
+                        : 'lead n/a'}
+                    </p>
                   </div>
-                  <div className="bg-ink-800 p-3">
-                    <p className="text-[10px] uppercase tracking-wide text-sky-400">
+                  <div className="bg-ink-800 p-4">
+                    <p className="text-[13px] uppercase tracking-wide text-sky-400">
                       SentinelAI
                     </p>
-                    <p className="stat mt-1 text-lg text-emerald-300">100%</p>
-                    <p className="text-[10.5px] text-slate-500">detection · 64.6 min lead</p>
+                    <p className="stat mt-1.5 text-2xl text-emerald-300">
+                      {(board.compound_detection_rate * 100).toFixed(1)}%
+                    </p>
+                    <p className="mt-0.5 text-[14px] text-slate-500">
+                      detection ·{' '}
+                      {board.matched_compound_lead_min
+                        ? `${board.matched_compound_lead_min.toFixed(1)} min lead`
+                        : 'lead n/a'}
+                    </p>
                   </div>
                 </div>
-                <p className="mt-2 text-[10.5px] text-slate-500">
-                  At the baseline's own false-alarm rate, the compound engine dominates on
-                  every axis simultaneously — 2.4× the warning time and +26.6 points of
-                  detection.
+                <p className="mt-3 text-[14px] leading-relaxed text-slate-500">
+                  Detection advantage:{' '}
+                  <span className="text-emerald-300">
+                    +{((board.compound_detection_rate - board.baseline_detection_rate) * 100).toFixed(1)} points
+                  </span>{' '}
+                  · false alarms cut from{' '}
+                  {(board.baseline_false_alarm_rate * 100).toFixed(1)}% to{' '}
+                  <span className="text-emerald-300">
+                    {(board.compound_false_alarm_rate * 100).toFixed(1)}%
+                  </span>
+                  . Figures read live from the evaluation report, not hard-coded.
                 </p>
               </div>
             </Panel>
@@ -58,7 +79,7 @@ export function Evidence() {
 
         <div className="flex flex-col gap-3">
           <Panel title="Why the model has no shift features">
-            <div className="space-y-2.5 p-4 text-[11.5px] leading-relaxed text-slate-300">
+            <div className="space-y-2.5 p-4 text-[13.5px] leading-relaxed text-slate-300">
               <p>
                 Shift changeover was modelled properly — operator detection latency and
                 handover information loss — and it turned out to be genuinely causal:
@@ -83,14 +104,14 @@ export function Evidence() {
                 multipliers for alert ranking, where they inform the operator without ever
                 teaching the model complacency.
               </p>
-              <p className="text-[10.5px] text-slate-500">
+              <p className="text-[12.5px] text-slate-500">
                 Reproduce: <code className="text-slate-400">scripts/ablation_shift.py</code>
               </p>
             </div>
           </Panel>
 
           <Panel title="Model card">
-            <dl className="divide-y divide-ink-600 text-[11.5px]">
+            <dl className="divide-y divide-ink-600 text-[13.5px]">
               <Row k="Task" v="P(incident within 30 min) from observable signals" />
               <Row k="Algorithm" v="Gradient-boosted trees (LightGBM), 23 features" />
               <Row k="Labels" v="Physical threshold crossing emerging from simulated dynamics — not hand-written risk rules" />
@@ -112,7 +133,7 @@ export function Evidence() {
 function Row({ k, v }: { k: string; v: string }) {
   return (
     <div className="grid grid-cols-[128px_minmax(0,1fr)] gap-3 px-4 py-2">
-      <dt className="text-[10px] uppercase tracking-wide text-slate-500">{k}</dt>
+      <dt className="text-[11.5px] uppercase tracking-wide text-slate-500">{k}</dt>
       <dd className="text-slate-300">{v}</dd>
     </div>
   )

@@ -53,8 +53,8 @@ export function Compliance() {
               <li key={c.standard} className="px-4 py-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-[12px] text-slate-200">{c.standard}</p>
-                    <p className="text-[10.5px] text-slate-500">{c.issuer}</p>
+                    <p className="text-[14px] text-slate-200">{c.standard}</p>
+                    <p className="text-[12.5px] text-slate-500">{c.issuer}</p>
                   </div>
                   <span
                     className={`chip shrink-0 ${
@@ -66,13 +66,13 @@ export function Compliance() {
                     {c.provenance.replace('_', ' ').toLowerCase()}
                   </span>
                 </div>
-                <p className="mt-1.5 text-[10.5px] leading-snug text-slate-500">{c.detail}</p>
+                <p className="mt-1.5 text-[12.5px] leading-snug text-slate-500">{c.detail}</p>
               </li>
             ))}
           </ul>
 
           <div className="border-t border-ink-600 p-4">
-            <p className="text-[10.5px] leading-snug text-slate-500">
+            <p className="text-[12.5px] leading-snug text-slate-500">
               The assistant answers only from retrieved passages. When no passage is
               relevant it declines rather than drawing on model memory — a confidently
               wrong regulatory answer is worse than none. Licensed standards are never

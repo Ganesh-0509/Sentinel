@@ -56,7 +56,7 @@ export function Alerts() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`rounded border px-2.5 py-1 text-[11px] transition ${
+            className={`rounded border px-2.5 py-1 text-[13px] transition ${
               filter === f
                 ? 'border-sky-500/50 bg-sky-500/15 text-sky-200'
                 : 'border-ink-600 bg-ink-700/50 text-slate-400 hover:text-slate-200'
@@ -82,32 +82,32 @@ export function Alerts() {
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <span className={`chip ${bandBadge[a.priority]}`}>{a.priority}</span>
-                      <span className="text-[12px] text-slate-200">{a.zone_name}</span>
-                      <span className="font-mono text-[10px] text-slate-600">
+                      <span className="text-[14px] text-slate-200">{a.zone_name}</span>
+                      <span className="font-mono text-[11.5px] text-slate-600">
                         {a.alert_id}
                       </span>
                     </div>
-                    <p className="mt-1 text-[10.5px] text-slate-500">
+                    <p className="mt-1 text-[12.5px] text-slate-500">
                       {a.drivers.join(' · ') || 'no aggravating factors'}
                     </p>
                   </div>
 
                   <div className="flex shrink-0 items-center gap-4 text-right">
                     <div>
-                      <p className="stat text-[12px] text-slate-200">
+                      <p className="stat text-[14px] text-slate-200">
                         {(a.risk * 100).toFixed(0)}%
                       </p>
-                      <p className="text-[9.5px] text-slate-600">risk</p>
+                      <p className="text-[11px] text-slate-600">risk</p>
                     </div>
                     <div>
-                      <p className="stat text-[12px] text-amber-300">
+                      <p className="stat text-[14px] text-amber-300">
                         {a.lead_time_min !== null ? `${a.lead_time_min}m` : '—'}
                       </p>
-                      <p className="text-[9.5px] text-slate-600">lead</p>
+                      <p className="text-[11px] text-slate-600">lead</p>
                     </div>
                     <div>
-                      <p className="stat text-[12px] text-slate-300">{a.score.toFixed(2)}</p>
-                      <p className="text-[9.5px] text-slate-600">priority</p>
+                      <p className="stat text-[14px] text-slate-300">{a.score.toFixed(2)}</p>
+                      <p className="text-[11px] text-slate-600">priority</p>
                     </div>
                   </div>
                 </Link>
@@ -117,7 +117,7 @@ export function Alerts() {
         )}
       </Panel>
 
-      <p className="mt-2 text-[10.5px] leading-snug text-slate-500">
+      <p className="mt-2 text-[12.5px] leading-snug text-slate-500">
         Priority score = compound risk × exposure (people in zone) × urgency (night shift,
         shift changeover). Shift state deliberately affects <em>ranking</em>, never the risk
         model itself — see Model Evidence for why.
@@ -136,9 +136,9 @@ function Stat({ label, value, hint, tone }: {
   }
   return (
     <div className={`rounded-lg border bg-ink-800/80 p-3 ${tones[tone]}`}>
-      <p className="text-[10px] uppercase tracking-wide text-slate-500">{label}</p>
+      <p className="text-[11.5px] uppercase tracking-wide text-slate-500">{label}</p>
       <p className="stat mt-0.5 text-xl">{value}</p>
-      <p className="mt-0.5 text-[10.5px] leading-snug text-slate-500">{hint}</p>
+      <p className="mt-0.5 text-[12.5px] leading-snug text-slate-500">{hint}</p>
     </div>
   )
 }

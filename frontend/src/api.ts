@@ -1,8 +1,11 @@
 import type {
   AlarmPerformance,
   AlertItem,
+  BlastRadius,
   ComplianceAnswer,
   ContributingFactor,
+  GraphSnapshot,
+  PermitToSuspend,
   Health,
   IncidentRecord,
   KpiSummary,
@@ -95,6 +98,13 @@ export const api = {
     request<IncidentRecord[]>(
       `/incidents/records?limit=${limit}${outcome ? `&outcome=${outcome}` : ''}`,
     ),
+
+  // knowledge graph
+  graph: () => request<GraphSnapshot>('/graph'),
+  blastRadius: (zoneId: string, maxHops = 2) =>
+    request<BlastRadius>(`/graph/blast-radius/${zoneId}?max_hops=${maxHops}`),
+  permitsToSuspend: (zoneId: string, maxHops = 2) =>
+    request<PermitToSuspend[]>(`/graph/permits-to-suspend/${zoneId}?max_hops=${maxHops}`),
 }
 
 export { ApiError }

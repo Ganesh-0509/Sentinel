@@ -1,4 +1,4 @@
-// Capture each route for visual review. Not part of the app bundle.
+﻿// Capture each route for visual review. Not part of the app bundle.
 import { chromium } from 'playwright'
 import { mkdirSync } from 'node:fs'
 
@@ -12,6 +12,7 @@ const ROUTES = [
   ['alerts', '/alerts'],
   ['analytics', '/analytics'],
   ['incidents', '/incidents'],
+  ['graph', '/graph'],
   ['permits', '/permits'],
   ['compliance', '/compliance'],
   ['evidence', '/evidence'],
@@ -37,3 +38,4 @@ for (const [name, route] of ROUTES) {
 }
 
 await browser.close()
+

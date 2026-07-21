@@ -153,7 +153,7 @@ export function PlantMap({ zones, selected, onSelect }: Props) {
 
 function Legend() {
   return (
-    <div className="flex items-center gap-3 text-[10px] text-slate-400">
+    <div className="flex items-center gap-3 text-[11.5px] text-slate-400">
       {(['low', 'medium', 'high', 'critical'] as const).map((b) => (
         <span key={b} className="flex items-center gap-1">
           <span className={`h-2 w-2 rounded-full ${riskFill[b]}`} />

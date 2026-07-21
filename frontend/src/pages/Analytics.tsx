@@ -32,20 +32,26 @@ const BAND_BAR: Record<string, string> = {
 }
 
 export function Analytics() {
-  const { zones } = usePlant()
+  const { minute } = usePlant()
   const [tiers, setTiers] = useState<TierSummary | null>(null)
   const [alarms, setAlarms] = useState<AlarmPerformance | null>(null)
   const [dist, setDist] = useState<RiskDistribution | null>(null)
   const [factors, setFactors] = useState<ContributingFactor[]>([])
   const [trend, setTrend] = useState<TrendPoint[]>([])
 
+  // `zones` is a fresh array on every 2 s poll, so depending on it re-fired all five
+  // endpoints twice a second. Time-varying panels key off the clock minute; the two
+  // that never change during a session are fetched once.
+  useEffect(() => {
+    api.alarmPerformance().then(setAlarms).catch(() => setAlarms(null))
+    api.contributingFactors(10).then(setFactors).catch(() => setFactors([]))
+  }, [])
+
   useEffect(() => {
     api.tiers().then(setTiers).catch(() => setTiers(null))
-    api.alarmPerformance().then(setAlarms).catch(() => setAlarms(null))
     api.riskDistribution().then(setDist).catch(() => setDist(null))
-    api.contributingFactors(10).then(setFactors).catch(() => setFactors([]))
     api.trend(240).then(setTrend).catch(() => setTrend([]))
-  }, [zones])
+  }, [minute])
 
   return (
     <>
@@ -57,7 +63,7 @@ export function Analytics() {
       {/* ---------------- API RP 754 tier classification ---------------- */}
       <Panel
         title="Process safety indicator tiers"
-        meta={<span className="text-[10px] text-slate-500">{tiers?.framework}</span>}
+        meta={<span className="text-[11.5px] text-slate-500">{tiers?.framework}</span>}
       >
         {!tiers ? (
           <Empty>Analytics unavailable.</Empty>
@@ -67,7 +73,7 @@ export function Analytics() {
               {tiers.tiers.map((t) => (
                 <div key={t.tier} className="bg-ink-800 p-3">
                   <div className="flex items-center justify-between">
-                    <p className="text-[10px] uppercase tracking-wide text-slate-500">
+                    <p className="text-[11.5px] uppercase tracking-wide text-slate-500">
                       Tier {t.tier}
                     </p>
                     <span
@@ -87,9 +93,9 @@ export function Analytics() {
                   >
                     {t.count}
                   </p>
-                  <p className="mt-0.5 text-[10.5px] leading-snug text-slate-500">{t.name}</p>
+                  <p className="mt-0.5 text-[12.5px] leading-snug text-slate-500">{t.name}</p>
                   {t.external_reporting && (
-                    <p className="mt-1 text-[9.5px] text-slate-600">
+                    <p className="mt-1 text-[11px] text-slate-600">
                       externally reportable
                     </p>
                   )}
@@ -98,7 +104,7 @@ export function Analytics() {
             </div>
 
             <div className="border-t border-ink-600 p-3">
-              <p className="mb-2 text-[10.5px] leading-snug text-slate-500">{tiers.note}</p>
+              <p className="mb-2 text-[12.5px] leading-snug text-slate-500">{tiers.note}</p>
               <div className="space-y-1.5">
                 {tiers.tiers
                   .flatMap((t) => t.events.map((e) => ({ ...e, tier: t.tier })))
@@ -111,11 +117,11 @@ export function Analytics() {
                         T{e.tier}
                       </span>
                       <div className="min-w-0">
-                        <p className="text-[11.5px] text-slate-200">
+                        <p className="text-[13.5px] text-slate-200">
                           {e.event}{' '}
                           <span className="text-slate-500">· {e.zone}</span>
                         </p>
-                        <p className="text-[10.5px] text-slate-500">{e.detail}</p>
+                        <p className="text-[12.5px] text-slate-500">{e.detail}</p>
                       </div>
                     </div>
                   ))}
@@ -132,13 +138,13 @@ export function Analytics() {
       <div className="mt-3 grid gap-3 xl:grid-cols-2">
         <Panel
           title="Alarm system performance"
-          meta={<span className="text-[10px] text-slate-500">{alarms?.framework}</span>}
+          meta={<span className="text-[11.5px] text-slate-500">{alarms?.framework}</span>}
         >
           {!alarms?.available ? (
             <Empty>Run the evaluation pipeline to populate alarm analytics.</Empty>
           ) : (
             <div className="p-3">
-              <p className="mb-3 text-[10.5px] leading-snug text-slate-500">
+              <p className="mb-3 text-[12.5px] leading-snug text-slate-500">
                 EEMUA 191 puts the acceptable operator load at under{' '}
                 {alarms.benchmarks!.target_per_hour} alarms per hour; above{' '}
                 {alarms.benchmarks!.seriously_deficient_per_hour} the alarm system is
@@ -150,10 +156,10 @@ export function Analytics() {
               {alarms.systems!.map((s) => (
                 <div key={s.system} className="mb-3">
                   <div className="mb-1 flex items-baseline justify-between">
-                    <span className="text-[11.5px] text-slate-300">{s.system}</span>
+                    <span className="text-[13.5px] text-slate-300">{s.system}</span>
                     <span className={`stat text-sm ${BAND_BAR[s.band]}`}>
                       {s.alarms_per_operator_hour}
-                      <span className="ml-1 text-[10px] text-slate-500">/op/hr</span>
+                      <span className="ml-1 text-[11.5px] text-slate-500">/op/hr</span>
                     </span>
                   </div>
                   <div className="relative h-2 w-full rounded bg-ink-600">
@@ -178,7 +184,7 @@ export function Analytics() {
                       title="EEMUA 191 target"
                     />
                   </div>
-                  <p className="mt-0.5 text-[10px] text-slate-600">
+                  <p className="mt-0.5 text-[11.5px] text-slate-600">
                     {s.band.replace(/_/g, ' ').toLowerCase()} · measured{' '}
                     {(s.false_alarm_rate * 100).toFixed(1)}% false-alarm rate per zone
                   </p>
@@ -189,12 +195,12 @@ export function Analytics() {
                 <p className="stat text-lg text-emerald-300">
                   âˆ’{alarms.nuisance_reduction_pct}%
                 </p>
-                <p className="text-[10.5px] text-emerald-200/80">
+                <p className="text-[12.5px] text-emerald-200/80">
                   reduction in operator alarm load versus the single-sensor baseline.
                 </p>
               </div>
 
-              <p className="mt-2 text-[10px] leading-snug text-slate-600">
+              <p className="mt-2 text-[11.5px] leading-snug text-slate-600">
                 {alarms.projection_note}
               </p>
             </div>
@@ -203,7 +209,7 @@ export function Analytics() {
 
         {/* ---------------- contributing factors ---------------- */}
         <Panel title="Contributing factors" meta={
-          <span className="text-[10px] text-slate-500">global model attribution</span>
+          <span className="text-[11.5px] text-slate-500">global model attribution</span>
         }>
           {factors.length === 0 ? (
             <Empty>Model attribution unavailable.</Empty>
@@ -234,7 +240,7 @@ export function Analytics() {
                   <RBar dataKey="importance" fill="#38bdf8" radius={[0, 2, 2, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-              <p className="mt-1 text-[10.5px] leading-snug text-slate-500">
+              <p className="mt-1 text-[12.5px] leading-snug text-slate-500">
                 Which signals drive risk plant-wide. Note the spread across gas,
                 pressure, vibration and operational context — a single-sensor alarm
                 sees only the first of these.

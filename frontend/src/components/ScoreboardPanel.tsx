@@ -12,7 +12,7 @@ export function ScoreboardPanel({ data }: Props) {
   if (!data) {
     return (
       <div className="panel p-4">
-        <p className="text-[11px] text-slate-500">
+        <p className="text-[13px] text-slate-500">
           No evaluation report — run <code className="text-slate-400">scripts/run_pipeline.py</code>.
         </p>
       </div>
@@ -44,18 +44,18 @@ export function ScoreboardPanel({ data }: Props) {
     <div className="panel">
       <div className="panel-header">
         <h2 className="panel-title">Evidence — vs single-sensor baseline</h2>
-        <span className="stat text-[10px] text-slate-500">
+        <span className="stat text-[11.5px] text-slate-500">
           {data.n_episodes} held-out episodes
         </span>
       </div>
 
       <div className="p-4">
-        <div className="mb-3 grid grid-cols-[1fr_auto_auto] gap-x-4 gap-y-2 text-[11px]">
+        <div className="mb-3 grid grid-cols-[1fr_auto_auto] gap-x-4 gap-y-2 text-[13px]">
           <span />
-          <span className="text-right text-[10px] uppercase tracking-wide text-slate-500">
+          <span className="text-right text-[11.5px] uppercase tracking-wide text-slate-500">
             Baseline
           </span>
-          <span className="text-right text-[10px] uppercase tracking-wide text-sky-400">
+          <span className="text-right text-[11.5px] uppercase tracking-wide text-sky-400">
             SentinelAI
           </span>
 
@@ -71,7 +71,7 @@ export function ScoreboardPanel({ data }: Props) {
           <p className="stat text-lg text-emerald-300">
             {data.incidents_missed_by_baseline_caught_by_compound}
           </p>
-          <p className="text-[11px] text-emerald-200/80">
+          <p className="text-[13px] text-emerald-200/80">
             incidents the single-sensor baseline missed entirely that SentinelAI caught —
             each one a compound event no single sensor could see.
           </p>

@@ -17,16 +17,18 @@ import { usePlant } from '../state/PlantContext'
 import type { KpiSummary, TierSummary, TrendPoint } from '../types'
 
 export function Overview() {
-  const { zones, alerts } = usePlant()
+  const { zones, alerts, minute } = usePlant()
   const [kpis, setKpis] = useState<KpiSummary | null>(null)
   const [trend, setTrend] = useState<TrendPoint[]>([])
   const [tiers, setTiers] = useState<TierSummary | null>(null)
 
+  // Keyed to the clock minute, not to `zones` — `zones` is a new array reference on
+  // every poll, which re-fired these three endpoints twice a second.
   useEffect(() => {
     api.kpis().then(setKpis).catch(() => setKpis(null))
     api.trend(120).then(setTrend).catch(() => setTrend([]))
     api.tiers().then(setTiers).catch(() => setTiers(null))
-  }, [zones])
+  }, [minute])
 
   const leadingEvents = tiers?.leading_events ?? 0
 
@@ -44,7 +46,7 @@ export function Overview() {
               <KpiCard key={k.key} kpi={k} />
             ))}
           </div>
-          <p className="mt-2 text-[10.5px] text-slate-500">
+          <p className="mt-2 text-[12.5px] text-slate-500">
             Leading-to-lagging ratio{' '}
             <span className={kpis.ratio_ok ? 'text-emerald-300' : 'text-amber-300'}>
               {kpis.leading_to_lagging_ratio}:1
@@ -61,7 +63,7 @@ export function Overview() {
         <div className="flex flex-col gap-3">
           <Panel
             title="Plant risk trend"
-            meta={<span className="stat text-[10px] text-slate-500">last 120 min</span>}
+            meta={<span className="stat text-[11.5px] text-slate-500">last 120 min</span>}
           >
             <div className="p-2">
               <ResponsiveContainer width="100%" height={150}>
@@ -95,7 +97,7 @@ export function Overview() {
           <Panel
             title="Critical attention"
             meta={
-              <Link to="/alerts" className="text-[10px] text-sky-400 hover:text-sky-300">
+              <Link to="/alerts" className="text-[11.5px] text-sky-400 hover:text-sky-300">
                 all alerts →
               </Link>
             }
@@ -112,14 +114,14 @@ export function Overview() {
                       className="flex items-center justify-between gap-3 px-4 py-2.5 transition hover:bg-ink-700/40"
                     >
                       <div className="min-w-0">
-                        <p className="truncate text-[12px] text-slate-200">{a.zone_name}</p>
-                        <p className="truncate text-[10.5px] text-slate-500">
+                        <p className="truncate text-[14px] text-slate-200">{a.zone_name}</p>
+                        <p className="truncate text-[12.5px] text-slate-500">
                           {a.drivers.join(' · ') || 'no aggravating factors'}
                         </p>
                       </div>
                       <div className="flex shrink-0 items-center gap-2">
                         {a.lead_time_min !== null && (
-                          <span className="stat text-[10.5px] text-amber-300">
+                          <span className="stat text-[12.5px] text-amber-300">
                             ~{a.lead_time_min}m
                           </span>
                         )}
@@ -134,12 +136,12 @@ export function Overview() {
 
           {tiers && (
             <Panel title="Process safety indicators" meta={
-              <span className="text-[10px] text-slate-500">{tiers.framework}</span>
+              <span className="text-[11.5px] text-slate-500">{tiers.framework}</span>
             }>
               <div className="grid grid-cols-4 gap-px bg-ink-600">
                 {tiers.tiers.map((t) => (
                   <div key={t.tier} className="bg-ink-800 px-3 py-2.5 text-center">
-                    <p className="text-[10px] uppercase tracking-wide text-slate-500">
+                    <p className="text-[11.5px] uppercase tracking-wide text-slate-500">
                       Tier {t.tier}
                     </p>
                     <p className={`stat text-lg ${
@@ -149,11 +151,11 @@ export function Overview() {
                     }`}>
                       {t.count}
                     </p>
-                    <p className="text-[9.5px] text-slate-600">{t.kind}</p>
+                    <p className="text-[11px] text-slate-600">{t.kind}</p>
                   </div>
                 ))}
               </div>
-              <p className="px-4 py-2 text-[10.5px] leading-snug text-slate-500">
+              <p className="px-4 py-2 text-[12.5px] leading-snug text-slate-500">
                 {leadingEvents} leading events open — these are still actionable.
                 Tier 1 and 2 are only counted after containment has already been lost.
               </p>

@@ -32,7 +32,7 @@ export function CompliancePanel() {
       <div className="panel-header">
         <h2 className="panel-title">Compliance Assistant</h2>
         {ans && (
-          <span className="stat text-[10px] text-slate-500">via {ans.backend}</span>
+          <span className="stat text-[11.5px] text-slate-500">via {ans.backend}</span>
         )}
       </div>
 
@@ -49,12 +49,12 @@ export function CompliancePanel() {
           onChange={(e) => setQ(e.target.value)}
           placeholder="Ask about a regulation…"
           autoComplete="off"
-          className="flex-1 rounded border border-ink-600 bg-ink-900 px-2.5 py-1.5 text-[11px] text-slate-200 placeholder:text-slate-600"
+          className="flex-1 rounded border border-ink-600 bg-ink-900 px-2.5 py-1.5 text-[13px] text-slate-200 placeholder:text-slate-600"
         />
         <button
           type="submit"
           disabled={busy || q.trim().length < 5}
-          className="rounded bg-slate-700 px-3 py-1.5 text-[11px] font-medium text-slate-100 transition hover:bg-slate-600 disabled:opacity-40"
+          className="rounded bg-slate-700 px-3 py-1.5 text-[13px] font-medium text-slate-100 transition hover:bg-slate-600 disabled:opacity-40"
         >
           {busy ? '…' : 'Ask'}
         </button>
@@ -65,14 +65,14 @@ export function CompliancePanel() {
           <button
             key={s}
             onClick={() => { setQ(s); ask(s) }}
-            className="rounded border border-ink-600 bg-ink-700/60 px-2 py-1 text-[10px] text-slate-400 transition hover:border-ink-500 hover:text-slate-200"
+            className="rounded border border-ink-600 bg-ink-700/60 px-2 py-1 text-[11.5px] text-slate-400 transition hover:border-ink-500 hover:text-slate-200"
           >
             {s.length > 42 ? `${s.slice(0, 42)}…` : s}
           </button>
         ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3 text-[11px] leading-relaxed">
+      <div className="flex-1 overflow-y-auto p-3 text-[13px] leading-relaxed">
         {error && <p className="text-red-300">{error}</p>}
         {!ans && !busy && !error && (
           <p className="text-slate-500">
@@ -112,7 +112,7 @@ export function CompliancePanel() {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-2 text-[10px] text-slate-600">
+                <p className="mt-2 text-[11.5px] text-slate-600">
                   Sources marked non-official are development stand-ins, not the
                   operative standard text.
                 </p>

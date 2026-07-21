@@ -234,6 +234,53 @@ export interface IncidentRecord {
   detected_by_single_sensor: boolean
 }
 
+export interface GraphNodeT {
+  id: string
+  kind: string
+  label: string
+  attrs: Record<string, unknown>
+}
+
+export interface GraphEdgeT {
+  source: string
+  target: string
+  relation: string
+  attrs: Record<string, unknown>
+}
+
+export interface GraphSnapshot {
+  nodes: GraphNodeT[]
+  edges: GraphEdgeT[]
+  counts: Record<string, number>
+}
+
+export interface ConnectedZone {
+  zone_id: string
+  zone: string
+  hops: number
+  workers: number
+  hot_work_active: boolean
+  risk: number
+}
+
+export interface BlastRadius {
+  origin: string
+  origin_zone: string
+  origin_workers: number
+  connected_zones: ConnectedZone[]
+  total_workers_at_risk: number
+  ignition_sources_in_radius: string[]
+}
+
+export interface PermitToSuspend {
+  permit_id: string
+  permit_type: string
+  zone_id: string
+  zone: string
+  hops_from_origin: number
+  is_ignition_source: boolean
+}
+
 export interface Health {
   status: 'ok' | 'degraded'
   version: string

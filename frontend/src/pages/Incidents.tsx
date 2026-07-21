@@ -44,12 +44,12 @@ export function Incidents() {
           </div>
 
           <Panel title="Recurring precursor patterns" meta={
-            <span className="text-[10px] text-slate-500">ranked by lift</span>
+            <span className="text-[11.5px] text-slate-500">ranked by lift</span>
           }>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[820px] text-[11.5px]">
+              <table className="w-full min-w-[820px] text-[13.5px]">
                 <thead>
-                  <tr className="border-b border-ink-600 text-left text-[10px] uppercase tracking-wide text-slate-500">
+                  <tr className="border-b border-ink-600 text-left text-[11.5px] uppercase tracking-wide text-slate-500">
                     <th className="px-4 py-2 font-medium">Precursor combination</th>
                     <th className="px-3 py-2 text-right font-medium">Lift</th>
                     <th className="px-3 py-2 text-right font-medium">Occurrences</th>
@@ -83,7 +83,7 @@ export function Incidents() {
                 </tbody>
               </table>
             </div>
-            <p className="border-t border-ink-600 px-4 py-2 text-[10.5px] leading-snug text-slate-500">
+            <p className="border-t border-ink-600 px-4 py-2 text-[12.5px] leading-snug text-slate-500">
               {summary.method}
             </p>
           </Panel>
@@ -95,12 +95,12 @@ export function Incidents() {
                   <li key={p.pattern} className="px-4 py-3">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
-                        <span className="stat mt-0.5 shrink-0 text-[11px] text-slate-600">
+                        <span className="stat mt-0.5 shrink-0 text-[13px] text-slate-600">
                           {String(i + 1).padStart(2, '0')}
                         </span>
                         <div className="min-w-0">
-                          <p className="text-[12px] text-slate-200">{p.pattern}</p>
-                          <p className="text-[10.5px] text-slate-500">
+                          <p className="text-[14px] text-slate-200">{p.pattern}</p>
+                          <p className="text-[12.5px] text-slate-500">
                             {p.occurrences} occurrences · {p.incidents} incidents ·{' '}
                             <span className="text-amber-300">
                               {p.single_sensor_missed} not caught by a point sensor
@@ -114,7 +114,7 @@ export function Incidents() {
                     </div>
                     <ul className="mt-2 space-y-1 pl-9">
                       {p.actions.map((a, j) => (
-                        <li key={j} className="flex gap-2 text-[11px] text-slate-400">
+                        <li key={j} className="flex gap-2 text-[13px] text-slate-400">
                           <span className="text-emerald-400">▸</span>
                           {a}
                         </li>
@@ -134,7 +134,7 @@ export function Incidents() {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`rounded border px-2 py-0.5 text-[10px] transition ${
+              className={`rounded border px-2 py-0.5 text-[11.5px] transition ${
                 filter === f
                   ? 'border-sky-500/50 bg-sky-500/15 text-sky-200'
                   : 'border-ink-600 text-slate-500 hover:text-slate-300'
@@ -153,10 +153,10 @@ export function Incidents() {
               <li key={r.record_id} className="px-4 py-2.5">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <span className="font-mono text-[10px] text-slate-600">
+                    <span className="font-mono text-[11.5px] text-slate-600">
                       {r.record_id}
                     </span>
-                    <span className="ml-2 text-[11.5px] text-slate-300">{r.zone}</span>
+                    <span className="ml-2 text-[13.5px] text-slate-300">{r.zone}</span>
                   </div>
                   <div className="flex shrink-0 gap-1.5">
                     {!r.detected_by_single_sensor && r.outcome === 'INCIDENT' && (
@@ -176,11 +176,11 @@ export function Incidents() {
                   </div>
                 </div>
                 <details className="group mt-1">
-                  <summary className="cursor-pointer list-none text-[10.5px] leading-snug text-slate-500 [&::-webkit-details-marker]:hidden">
+                  <summary className="cursor-pointer list-none text-[12.5px] leading-snug text-slate-500 [&::-webkit-details-marker]:hidden">
                     <span className="line-clamp-2 group-open:line-clamp-none">
                       {r.narrative}
                     </span>
-                    <span className="mt-0.5 inline-block text-[10px] text-sky-400/70 group-open:hidden">
+                    <span className="mt-0.5 inline-block text-[11.5px] text-sky-400/70 group-open:hidden">
                       show full record
                     </span>
                   </summary>
@@ -205,9 +205,9 @@ function Stat({ label, value, hint, tone }: {
   }
   return (
     <div className={`rounded-lg border bg-ink-800/80 p-3 ${tones[tone]}`}>
-      <p className="text-[10px] uppercase tracking-wide text-slate-500">{label}</p>
+      <p className="text-[11.5px] uppercase tracking-wide text-slate-500">{label}</p>
       <p className="stat mt-0.5 text-xl">{value}</p>
-      <p className="mt-0.5 text-[10.5px] leading-snug text-slate-500">{hint}</p>
+      <p className="mt-0.5 text-[12.5px] leading-snug text-slate-500">{hint}</p>
     </div>
   )
 }

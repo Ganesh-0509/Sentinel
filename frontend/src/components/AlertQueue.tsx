@@ -12,7 +12,7 @@ export function AlertQueue({ alerts, selected, onSelect }: Props) {
     <div className="panel flex h-full flex-col">
       <div className="panel-header">
         <h2 className="panel-title">Alert Queue</h2>
-        <span className="stat text-[11px] text-slate-500">
+        <span className="stat text-[13px] text-slate-500">
           {alerts.length} active
         </span>
       </div>
@@ -42,7 +42,7 @@ export function AlertQueue({ alerts, selected, onSelect }: Props) {
                   <span className={`chip ${bandBadge[a.priority]}`}>{a.priority}</span>
                 </div>
 
-                <div className="mt-1 flex items-center gap-3 text-[11px] text-slate-400">
+                <div className="mt-1 flex items-center gap-3 text-[13px] text-slate-400">
                   <span className="stat">
                     risk <span className="text-slate-200">{(a.risk * 100).toFixed(0)}%</span>
                   </span>
@@ -52,7 +52,7 @@ export function AlertQueue({ alerts, selected, onSelect }: Props) {
                 </div>
 
                 {a.drivers.length > 0 && (
-                  <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-slate-500">
+                  <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-slate-500">
                     {a.drivers.join(' · ')}
                   </p>
                 )}

@@ -4,6 +4,7 @@ import { Alerts } from './pages/Alerts'
 import { Analytics } from './pages/Analytics'
 import { Compliance } from './pages/Compliance'
 import { Evidence } from './pages/Evidence'
+import { Graph } from './pages/Graph'
 import { Incidents } from './pages/Incidents'
 import { MapPage } from './pages/MapPage'
 import { Overview } from './pages/Overview'
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="alerts" element={<Alerts />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="incidents" element={<Incidents />} />
+          <Route path="graph" element={<Graph />} />
           <Route path="permits" element={<Permits />} />
           <Route path="compliance" element={<Compliance />} />
           <Route path="evidence" element={<Evidence />} />
