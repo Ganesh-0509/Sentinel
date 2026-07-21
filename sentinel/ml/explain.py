@@ -6,6 +6,8 @@ strongest drivers, then translate the feature names into plain language.
 """
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 import pandas as pd
 
@@ -35,7 +37,20 @@ class RiskExplainer:
         self.features = forecaster.feature_columns
 
     def _shap_for_positive(self, X: pd.DataFrame) -> np.ndarray:
-        raw = self.explainer.shap_values(X)
+        # SHAP emits a UserWarning on every call for LightGBM binary classifiers,
+        # telling us the return shape changed to a list of ndarray. We already
+        # handle both shapes below, so the warning carries no information — and at
+        # one call per zone per poll it floods the server log. Suppressed narrowly
+        # by message rather than with a blanket filter, so any *other* SHAP warning
+        # still surfaces.
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                "ignore",
+                message=".*TreeExplainer shap values output has changed.*",
+                category=UserWarning,
+            )
+            raw = self.explainer.shap_values(X)
+
         if isinstance(raw, list):                 # [neg, pos]
             return np.asarray(raw[-1])
         raw = np.asarray(raw)
